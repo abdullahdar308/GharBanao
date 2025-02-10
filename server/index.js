@@ -25,7 +25,7 @@ const app = express();
 // 1) Middlewares
 app.use(
   cors({
-    origin: "https://ghar-banao-xi.vercel.app/login",
+    origin: "https://ghar-banao-xi.vercel.app",
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
     exposedHeaders: ["Authorization"],
