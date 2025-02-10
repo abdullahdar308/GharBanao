@@ -10,7 +10,7 @@ const UserLogin = () => {
   const loginUser = async ({ email, password }) => {
     try {
       setError(null);
-      const res = await fetch("https://gharbanao-87pi.onrender.com", {
+      const res = await fetch("https://gharbanao-87pi.onrender.com/api/auth/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
