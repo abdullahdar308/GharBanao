@@ -116,7 +116,7 @@ const CostEstimation = () => {
             Calculate Cost of your House
           </h1>
           <div className="form-section flex mt-8 items-center">
-            <div className="form w-3/5">
+            <div className="form w-full md:w-3/5">
               <form onSubmit={handleSubmit}>
                 {/* Form Fields */}
                 <div className="flex flex-col">
@@ -124,7 +124,7 @@ const CostEstimation = () => {
                     Location
                   </label>
                   <select
-                    className="bg-[#46837818] w-3/5 px-7 py-5 text-xl rounded-2xl outline-none"
+                    className="bg-[#46837818] w-full md:w-4/5 px-7 py-5 text-xl rounded-2xl outline-none"
                     value={location}
                     onChange={(e) => setLocation(e.target.value)}
                   >
@@ -140,7 +140,7 @@ const CostEstimation = () => {
                     Construction Type
                   </label>
                   <select
-                    className="bg-[#46837818] w-3/5 px-7 py-5 text-xl rounded-2xl outline-none"
+                    className="bg-[#46837818] w-full md:w-4/5 px-7 py-5 text-xl rounded-2xl outline-none"
                     value={constructionType}
                     onChange={(e) => setConstructionType(e.target.value)}
                   >
@@ -151,7 +151,7 @@ const CostEstimation = () => {
                   </select>
                 </div>
                 {/* Area and Area Unit */}
-                <div className="flex flex-col mt-7 w-3/5">
+                <div className="flex flex-col mt-7 w-full md:w-4/5">
                   <label className="text-xl ml-3 mb-2 font-medium">Area</label>
                   <div className="flex gap-3">
                     <input
@@ -175,7 +175,7 @@ const CostEstimation = () => {
                   </div>
                 </div>
                 {/* Covered Area */}
-                <div className="flex flex-col mt-7 w-3/5">
+                <div className="flex flex-col mt-7 w-full md:w-4/5">
                   <label className="text-xl ml-3 mb-2 font-medium">
                     Covered Area
                   </label>
@@ -234,14 +234,14 @@ const CostEstimation = () => {
                 </button>
               </form>
             </div>
-            <div className="w-2/5">
+            <div className="hidden md:flex w-2/5">
               <img src={herosecImage} alt="House estimation" />
             </div>
           </div>
         </div>
         {/* Display Cost and Pie Chart */}
         {estimatedCosts.totalCost && (
-          <div className="mt-20 mb-9 mx-44 p-10 pt-12 bg-gray-100 rounded-2xl shadow-md text-center">
+          <div className="mt-20 mb-9  md:mx-44 p-10 pt-12 bg-gray-100 rounded-2xl shadow-md text-center">
             <h2 className="text-5xl font-bold mb-14 ">Estimated Costs</h2>
             <div className="flex flex-col justify-between items-center">
               <h3 className="text-3xl font-semibold bg-[#D4E0E0] px-8 py-5 rounded-xl mt-4 inline">
