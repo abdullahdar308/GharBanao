@@ -1,0 +1,330 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: "Montserrat";
+  background-color: #fff;
+  color: #000;
+}
+
+html {
+  font-size: 10px;
+}
+
+.signup-container .left-part {
+  position: relative;
+}
+.signup-container .left-part .error {
+  color: red;
+  font-size: 1.1rem;
+  position: absolute;
+  margin-left: 2.3rem;
+  margin-top: 7.3rem;
+}
+
+.signup-container {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.signup-content {
+  width: 100%;
+  max-width: 1920px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* flex-direction: row-reverse; */
+}
+
+.signup-container .left-part,
+.right-part {
+  flex: 1;
+}
+
+.signup-container .left-part {
+  flex: 1;
+}
+
+.signup-container .right-part {
+  background-color: #46837818;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.signup-container .right-part-content {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+
+.signup-container .right-part .logo {
+  width: 21.5rem;
+}
+
+.signup-container .right-part .pic {
+  width: 55rem;
+}
+
+.signup-container .right-part p {
+  margin-top: 2rem;
+  font-size: 1.8rem;
+  color: #595959;
+  width: 42rem;
+  text-align: center;
+}
+
+.signup-container .left-part {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.signup-container .left-part .form-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1.7rem;
+}
+
+.signup-container .left-part h1 {
+  font-size: 3.2rem;
+  font-weight: 600;
+  color: #2c3433;
+  text-align: center;
+  margin-bottom: 2.8rem;
+}
+
+.signup-container .left-part label {
+  font-size: 1.6rem;
+  margin-bottom: 0.5rem;
+}
+
+.signup-container .left-part input {
+  background-color: #46837814;
+  margin-bottom: 1rem;
+  border: none;
+  font-size: 1.6rem;
+  font-weight: 400;
+  width: 40rem;
+  padding: 1.2rem 2.5rem;
+  color: #2c3433;
+  outline: none;
+  border-radius: 1rem;
+}
+
+.signup-container .left-part .signup-button {
+  background-color: #468378;
+  color: #fff;
+  border: none;
+  width: 40rem;
+  padding: 1rem 0;
+  font-size: 1.9rem;
+  margin-top: 1.8rem;
+  border-radius: 1rem;
+  outline: none;
+  cursor: pointer;
+}
+
+.signup-container .left-part .signup-button:hover {
+  /* background-color: linear-gradient(91.38deg, #4b9d8e 3.64%, #42726a 93.17%); */
+  background-color: #4b9d8e;
+  transition: 0.4s;
+}
+.signup-container .left-part p {
+  font-size: 1.3rem;
+  color: #595959;
+  text-align: center;
+  margin-top: 2rem;
+}
+
+.signup-container .left-part .forgot {
+  text-align: left;
+  margin-top: -1.8rem;
+  margin-bottom: 1rem;
+}
+.signup-container .left-part .forgot a {
+  font-size: 1.3rem;
+}
+
+.signup-container .left-part p a {
+  font-size: 1.5rem;
+  color: #468378;
+  font-weight: 700;
+}
+
+.signup-container .left-part .partition {
+  display: flex;
+}
+
+/* .signup-container .left-part hr {
+      width: 20rem;
+      } */
+
+.signup-container .left-part .copyrights {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.signup-container .left-part .copyrights img {
+  margin-right: 0.3rem;
+}
+
+.password-input-container {
+  position: relative;
+}
+
+.password-toggle-icon {
+  position: absolute;
+  right: 4rem;
+  cursor: pointer;
+  opacity: 50%;
+  position: relative;
+}
+
+/* Media Queries */
+
+@media only screen and (min-width: 1750px) {
+  html {
+    font-size: 11.5px;
+  }
+}
+
+@media only screen and (max-width: 1300px) {
+  html {
+    font-size: 9px;
+  }
+}
+@media only screen and (max-width: 1100px) {
+  html {
+    font-size: 7.5px;
+  }
+  .signup-container .right-part .pic {
+    width: 48rem;
+  }
+}
+
+@media only screen and (max-width: 780px) {
+  html {
+    font-size: 6.5px;
+  }
+}
+@media only screen and (max-width: 640px) {
+  html {
+    font-size: 5.5px;
+  }
+}
+
+@media only screen and (max-width: 480px) {
+  html {
+    font-size: 7px;
+  }
+  .signup-container .left-part .error {
+    margin-top: 9rem;
+  }
+  .signup-container {
+    background-color: #46837818;
+  }
+
+  .signup-container .left-part {
+    position: absolute;
+    bottom: 0;
+  }
+
+  .signup-container .right-part {
+    background-color: #ffffff00;
+    position: absolute;
+    top: 18rem;
+    display: block;
+  }
+
+  .signup-container .right-part .logo {
+    width: 28.5rem;
+    margin-bottom: 2rem;
+  }
+
+  .signup-container .right-part .pic {
+    display: none;
+  }
+
+  .signup-container .right-part p {
+    margin-top: 2rem;
+    font-size: 2.1rem;
+    width: 47rem;
+  }
+
+  .signup-container .left-part {
+    background-color: #fff;
+    width: 100vw;
+    border-radius: 5.5rem 5.5rem 0 0;
+    height: 90rem;
+  }
+
+  .signup-container .left-part h1 {
+    font-size: 3.2rem;
+    margin-bottom: 4rem;
+    margin-top: 5rem;
+  }
+
+  .signup-container .left-part label {
+    font-size: 1.8rem;
+    margin-bottom: 0.65rem;
+  }
+
+  .signup-container .left-part input {
+    font-size: 1.8rem;
+    width: 75vw;
+    padding: 1.6rem 2.5rem;
+  }
+
+  .signup-container .left-part button {
+    width: 83vw;
+    padding: 1.6rem 0;
+    font-size: 1.9rem;
+    margin-top: 1.8rem;
+  }
+
+  .signup-container .left-part p {
+    font-size: 1.6rem;
+  }
+
+  .signup-container .left-part p a {
+    font-size: 1.8rem;
+  }
+}
+
+@media only screen and (max-width: 410px) {
+  html {
+    font-size: 6.1px;
+  }
+}
+
+/* Add to LoginForm.css */
+.ant-modal-content {
+  border-radius: 12px !important;
+  padding: 24px !important;
+}
+
+.ant-steps-item-process .ant-steps-item-icon {
+  background-color: #468378 !important;
+  border: none;
+}
+
+.ant-input {
+  padding: 8px 12px !important;
+  border-radius: 6px !important;
+}
+
+.ant-steps-item-finish .ant-steps-item-icon > .ant-steps-icon {
+  color: #468378 !important; /* Change the checkmark color */
+}
+
+.ant-steps-item-finish .ant-steps-item-icon {
+  background-color: #46837824 !important; /* Change to your desired color */
+}

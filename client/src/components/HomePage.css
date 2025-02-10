@@ -1,0 +1,65 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: "Montserrat";
+  background-color: #fff;
+  color: #000;
+}
+
+.hero-sec .hero-sec {
+  display: flex;
+}
+
+.hero-sec .left-side {
+  padding-top: 10rem;
+  /* padding-left: 12rem; */
+}
+
+.hero-sec .main-line {
+  font-size: 4.7rem;
+  font-weight: 700;
+  width: 60rem;
+  color: #2c3433;
+}
+
+.hero-sec .second-line {
+  font-size: 1.8rem;
+  font-weight: 400;
+  width: 62rem;
+  color: #595959;
+  margin-top: 2rem;
+  margin-bottom: 3rem;
+}
+
+.hero-sec .main-line span {
+  color: #468378;
+}
+
+.hero-sec .design-btn {
+  background-color: #468378;
+  font-size: 1.9rem;
+  color: #fff;
+  width: 20rem;
+  height: 5rem;
+  border: none;
+  border-radius: 1.2rem;
+  cursor: pointer;
+}
+
+.hero-sec .right-side img {
+  width: 65rem;
+  margin-top: 6rem;
+  margin-left: 8rem;
+}
+
+.hero-sec {
+  display: flex;
+}
+
+.main-sec {
+  margin: auto;
+}
+
+.CTO-bg {
+  background: linear-gradient(180deg, #ffffff 49.8%, #dae6e4 50%);
+}

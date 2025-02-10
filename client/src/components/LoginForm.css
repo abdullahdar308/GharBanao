@@ -1,0 +1,30 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.login-container .right-part {
+  order: -1;
+}
+
+.signup-container .right-part .login-pic {
+  width: 64rem;
+  margin-top: 5rem;
+}
+.signup-container .left-part .inputField {
+  margin-bottom: 1.5rem;
+}
+
+/* Add to LoginForm.css */
+/* .ant-modal-content {
+  border-radius: 12px !important;
+  padding: 24px !important;
+}
+
+.ant-steps-item-process .ant-steps-item-icon {
+  background-color: #1890ff !important;
+}
+
+.ant-input {
+  padding: 8px 12px !important;
+  border-radius: 6px !important;
+} */

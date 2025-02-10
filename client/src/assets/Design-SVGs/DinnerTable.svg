@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 24.3.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg width="300" height="200" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 61.4 41.7" style="enable-background:new 0 0 61.4 41.7;" xml:space="preserve">
+<style type="text/css">
+	.st0{display:none;}
+	.st1{display:inline;}
+	.st2{display:inline;fill:none;stroke:#000000;stroke-miterlimit:10;}
+	.st3{fill:none;stroke:#000000;stroke-miterlimit:10;}
+	.st4{fill:none;stroke:#000000;stroke-width:0.75;stroke-linecap:round;stroke-miterlimit:10;}
+</style>
+<g id="Layer_1" class="st0">
+	<g>
+		<path class="st1" d="M1,1c8.5,0.2,15.3,3,20.2,8.4c9.5,10.3,9.4,27.2,9.3,31.3H1V1 M0,0v41.7h31.4C31.4,41.7,34.9,0,0,0L0,0z"/>
+	</g>
+	<g>
+		<path class="st1" d="M60.4,1v39.7H31.7c-0.2-4.1-0.2-21.3,9.3-31.6C45.8,3.9,52.3,1.2,60.4,1 M61.4,0c-34,0-30.6,41.7-30.6,41.7
+			h30.6V0L61.4,0z"/>
+	</g>
+	<path class="st2" d="M0.5,7.8"/>
+	<path class="st2" d="M0.5,33.9"/>
+	
+		<image style="display:inline;overflow:visible;" width="283" height="394" xlink:href="DB78C7EA.jpg"  transform="matrix(6.514630e-18 0.1064 -0.1064 6.514630e-18 41.9184 5.7955)">
+	</image>
+</g>
+<g id="Layer_2">
+	<g>
+		<g>
+			<path d="M49.6,10.8v20.1H10V10.8H49.6 M50.6,9.8H9v22.1h41.6V9.8L50.6,9.8z"/>
+		</g>
+		<g>
+			<path d="M47.1,13.8v14H12.5v-14H47.1 M48.1,12.8H11.5v16h36.6V12.8L48.1,12.8z"/>
+		</g>
+	</g>
+	<g>
+		<circle class="st3" cx="4.8" cy="20.9" r="2.4"/>
+		<circle class="st3" cx="54.8" cy="20.9" r="2.4"/>
+	</g>
+	<circle class="st3" cx="19.8" cy="35.5" r="2.4"/>
+	<circle class="st3" cx="40.2" cy="35.5" r="2.4"/>
+	<g>
+		<circle class="st3" cx="19.8" cy="6.2" r="2.4"/>
+		<circle class="st3" cx="40.2" cy="6.2" r="2.4"/>
+	</g>
+	<path class="st4" d="M2,18.4c0,0-2.5,2.4,0,4.9"/>
+	<path class="st4" d="M57.6,18.4c0,0,2.5,2.4,0,4.9"/>
+	<g>
+		<path class="st4" d="M22.2,3.2c0,0-2.4-2.5-4.9,0"/>
+		<path class="st4" d="M42.6,3.2c0,0-2.4-2.5-4.9,0"/>
+	</g>
+	<g>
+		<path class="st4" d="M22.2,38.5c0,0-2.4,2.5-4.9,0"/>
+		<path class="st4" d="M42.6,38.5c0,0-2.4,2.5-4.9,0"/>
+	</g>
+</g>
+</svg>
