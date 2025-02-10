@@ -22,7 +22,7 @@ const ProductInfo = () => {
   const handleDelete = async () => {
     try {
       const response = await fetch(
-        `http://localhost:3000/api/product/${productId}`,
+        `https://gharbanao-87pi.onrender.com/api/product/${productId}`,
         {
           method: "DELETE",
         }
@@ -51,7 +51,7 @@ const ProductInfo = () => {
           <div className="px-32 w-1/2 h-[500px] flex justify-center items-center rounded-2xl bg-[#F4F8F7] overflow-hidden">
             <img
               className="max-h-full object-contain"
-              src={`http://localhost:3000/${product?.image}`}
+              src={`https://gharbanao-87pi.onrender.com/${product?.image}`}
               alt={product?.name || "Product"}
             />
           </div>

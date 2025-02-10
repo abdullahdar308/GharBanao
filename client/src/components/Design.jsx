@@ -1158,7 +1158,7 @@ const Design = () => {
 
       console.log("Saving payload:", payload);
 
-      const response = await fetch("http://localhost:3000/api/designs", {
+      const response = await fetch("https://gharbanao-87pi.onrender.com/api/designs", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -1181,7 +1181,7 @@ const Design = () => {
       setDesignName("");
 
       // Refresh designs list
-      const designsResponse = await fetch("http://localhost:3000/api/designs", {
+      const designsResponse = await fetch("https://gharbanao-87pi.onrender.com/api/designs", {
         headers: { Authorization: `Bearer ${token}` },
       });
       const updatedDesigns = await designsResponse.json();
@@ -1206,7 +1206,7 @@ const Design = () => {
   const loadDesign = async (designId) => {
     try {
       const response = await fetch(
-        `http://localhost:3000/api/designs/${designId}`,
+        `https://gharbanao-87pi.onrender.com/api/designs/${designId}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -1246,7 +1246,7 @@ const Design = () => {
         }
 
         // 2. Make the request
-        const response = await fetch("http://localhost:3000/api/designs", {
+        const response = await fetch("https://gharbanao-87pi.onrender.com/api/designs", {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -1286,7 +1286,7 @@ const Design = () => {
 
     try {
       const response = await fetch(
-        `http://localhost:3000/api/designs/${designId}`,
+        `https://gharbanao-87pi.onrender.com/api/designs/${designId}`,
         {
           method: "DELETE",
           headers: {

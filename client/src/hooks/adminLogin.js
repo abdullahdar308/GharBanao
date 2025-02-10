@@ -1,6 +1,6 @@
 const loginAdmin = async ({ email, password }) => {
   try {
-    const res = await fetch("http://localhost:3000/api/admin/auth/login", {
+    const res = await fetch("https://gharbanao-87pi.onrender.com/api/admin/auth/login", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

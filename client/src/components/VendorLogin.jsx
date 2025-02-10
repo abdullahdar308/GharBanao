@@ -26,7 +26,7 @@ const VendorLogin = () => {
     setLoading(true);
     try {
       const response = await fetch(
-        "http://localhost:3000/api/vendor/send-otp",
+        "https://gharbanao-87pi.onrender.com/api/vendor/send-otp",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -56,7 +56,7 @@ const VendorLogin = () => {
     setLoading(true);
     try {
       const response = await fetch(
-        "http://localhost:3000/api/vendor/verify-otp",
+        "https://gharbanao-87pi.onrender.com/api/vendor/verify-otp",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

@@ -25,7 +25,7 @@ const VendorDashboard = () => {
   const handleDelete = async (productId) => {
     try {
       const response = await fetch(
-        `http://localhost:3000/api/product/${productId}`,
+        `https://gharbanao-87pi.onrender.com/api/product/${productId}`,
         {
           method: "DELETE",
         }

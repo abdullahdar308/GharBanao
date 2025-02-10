@@ -9,7 +9,7 @@ const useFetchVendors = () => {
   useEffect(() => {
     const fetchVendors = async () => {
       try {
-        const response = await fetch("http://localhost:3000/api/vendor/list");
+        const response = await fetch("https://gharbanao-87pi.onrender.com/api/vendor/list");
         if (!response.ok) {
           throw new Error("Failed to fetch vendors");
         }

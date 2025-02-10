@@ -8,7 +8,7 @@ const useFetchUserProducts = () => {
   const fetchProducts = async () => {
     try {
       const response = await fetch(
-        "http://localhost:3000/api/product/userList"
+        "https://gharbanao-87pi.onrender.com/api/product/userList"
       );
 
       if (!response.ok) throw new Error("Failed to fetch products");

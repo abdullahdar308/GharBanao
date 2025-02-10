@@ -13,7 +13,7 @@ const useUpdateProduct = () => {
       const token = localStorage.getItem("vendorToken"); // Get vendor token
 
       const response = await fetch(
-        `http://localhost:3000/api/product/update/${id}`,
+        `https://gharbanao-87pi.onrender.com/api/product/update/${id}`,
         {
           method: "PUT",
           headers: {

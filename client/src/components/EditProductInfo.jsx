@@ -24,7 +24,7 @@ const EditProductInfo = () => {
   // Fetch existing product details
   useEffect(() => {
     const fetchProduct = async () => {
-      const response = await fetch(`http://localhost:3000/api/product/${id}`);
+      const response = await fetch(`https://gharbanao-87pi.onrender.com/api/product/${id}`);
       const data = await response.json();
       if (response.ok) {
         setProductName(data.name);

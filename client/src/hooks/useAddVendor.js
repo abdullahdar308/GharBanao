@@ -11,7 +11,7 @@ const useAddVendor = () => {
     setError(null);
 
     try {
-        const response = await fetch("http://localhost:3000/api/vendor/add", {
+        const response = await fetch("https://gharbanao-87pi.onrender.com/api/vendor/add", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",

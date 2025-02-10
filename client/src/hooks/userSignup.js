@@ -9,7 +9,7 @@ const UserSignup = () => {
   const registerUser = async ({ name, email, password }) => {
     try {
       setError(null);
-      const res = await fetch("http://localhost:3000/api/auth/signup", {
+      const res = await fetch("https://gharbanao-87pi.onrender.com/api/auth/signup", {
         // Sends a POST request to the signup server endpoint (authRoute.js)
         method: "POST",
         headers: {

@@ -8,7 +8,7 @@ const useFetchProduct = (productId) => {
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        const response = await fetch(`http://localhost:3000/api/product/${productId}`);
+        const response = await fetch(`https://gharbanao-87pi.onrender.com/api/product/${productId}`);
         if (!response.ok) {
           throw new Error(`Failed to fetch product: ${response.statusText}`);
         }

@@ -113,7 +113,7 @@ const LoginForm = () => {
 
     try {
       const response = await fetch(
-        "http://localhost:3000/api/auth/forgot-password",
+        "https://gharbanao-87pi.onrender.com/api/auth/forgot-password",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -184,7 +184,7 @@ const LoginForm = () => {
 
     try {
       const response = await fetch(
-        "http://localhost:3000/api/auth/verify-reset-otp",
+        "https://gharbanao-87pi.onrender.com/api/auth/verify-reset-otp",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -221,7 +221,7 @@ const LoginForm = () => {
 
     try {
       const response = await fetch(
-        "http://localhost:3000/api/auth/reset-password",
+        "https://gharbanao-87pi.onrender.com/api/auth/reset-password",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

@@ -27,7 +27,7 @@ const useAddProduct = () => {
         formData.append("image", productData.image);
       }
 
-      const response = await fetch("http://localhost:3000/api/product/add", {
+      const response = await fetch("https://gharbanao-87pi.onrender.com/api/product/add", {
         method: "POST",
         body: formData,
         headers: {
