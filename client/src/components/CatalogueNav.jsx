@@ -3,7 +3,14 @@ import React from "react";
 
 const CatalogueNav = ({ selectedCategory, setSelectedCategory }) => {
   // Add "All" to categories
-  const categories = ["All", "Furniture", "Electronics"];
+  const categories = [
+    "All",
+    "Furniture",
+    "Electronics",
+    "Flooring",
+    "Decor",
+    "Kitchen Essentials",
+  ];
 
   const handleCategoryClick = (category) => {
     console.log("Selected Category:", category); // Debugging

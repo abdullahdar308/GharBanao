@@ -225,6 +225,12 @@ html {
   html {
     font-size: 7px;
   }
+  .signup-container {
+    overflow: hidden;
+    height: 100vh; /* Ensures it takes the full viewport height */
+    width: 100vw; /* Ensures it takes the full viewport width */
+  }
+
   .signup-container .left-part .error {
     margin-top: 9rem;
   }
@@ -234,13 +240,16 @@ html {
 
   .signup-container .left-part {
     position: absolute;
-    bottom: 0;
+    /* top: 30rem; */
+    bottom: -5rem;
+    z-index: 10;
+    flex: 1;
   }
 
   .signup-container .right-part {
     background-color: #ffffff00;
     position: absolute;
-    top: 18rem;
+    top: 10rem;
     display: block;
   }
 
@@ -283,8 +292,10 @@ html {
     padding: 1.6rem 2.5rem;
   }
 
-  .signup-container .left-part button {
-    width: 83vw;
+  .signup-container .left-part .signup-button,
+  .signup-container .left-part .signup-button,
+  .signup-container .left-part .signup-button {
+    width: 75vw;
     padding: 1.6rem 0;
     font-size: 1.9rem;
     margin-top: 1.8rem;

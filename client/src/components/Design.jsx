@@ -41,8 +41,10 @@ const Design = () => {
   const [area, setArea] = useState("");
   const [isBoundaryVisible, setIsBoundaryVisible] = useState(false);
   const [showProductDetails, setShowProductDetails] = useState(false);
+  const [showGreyStructureDetails, setShowGreyStructureDetails] =
+    useState(false);
 
-  const COLORS = ["#468378", "#2C3433", "#A8B0AF"];
+  const COLORS = ["#468378", "#A8B0AF", "#2C3433"];
 
   const divRef = useRef(null);
   const [divWidth, setDivWidth] = useState(0);
@@ -84,7 +86,6 @@ const Design = () => {
   const toggleDoorDropdown = () => setIsDoorDropdownOpen((prev) => !prev);
   const toggleFurnitureDropdown = () =>
     setIsFurnitureDropdownOpen((prev) => !prev);
-
 
   const [actionStack, setActionStack] = useState([]);
 
@@ -777,7 +778,7 @@ const Design = () => {
     const randomTop = Math.random() * (boundary.height - 100) + boundary.y;
 
     const text = new fabric.Textbox("Type here", {
-      fontFamily:`"Consolas", "Courier New", monospace`,
+      fontFamily: `"Consolas", "Courier New", monospace`,
       left: randomLeft,
       top: randomTop,
       width: 100,
@@ -1100,18 +1101,20 @@ const Design = () => {
     greyStructureCost: null,
     laborCost: null,
     productsCost: null,
+    wallCost: null,
   });
 
   // Modify your estimateCosts function
   const estimateCosts = () => {
     if (!canvas) return;
 
-    const ratePerSqFt = 1588;
+    const ratePerSqFt = 1640;
     const allObjects = canvas.getObjects();
     let totalCost = 0;
     let greyStructureCost = area * ratePerSqFt;
     let productsCost = 0;
-    let productDetails = []; // Stores individual product costs
+    let wallCost = 0;
+    let productMap = new Map(); // To store product counts and costs
 
     allObjects.forEach((obj) => {
       if (obj.customType) {
@@ -1124,16 +1127,22 @@ const Design = () => {
           const area = width * height;
           itemCost = area * obj.baseCostPerPixel;
           greyStructureCost += itemCost;
+          wallCost += itemCost;
         } else {
           // Other objects added to product cost
           itemCost = obj.cost || 0;
           productsCost += itemCost;
 
-          // Store product details
-          productDetails.push({
-            name: obj.customType || "Unknown Product",
-            value: itemCost,
-          });
+          // Store product count & total cost
+          if (productMap.has(obj.customType)) {
+            let existing = productMap.get(obj.customType);
+            productMap.set(obj.customType, {
+              count: existing.count + 1,
+              value: existing.value + itemCost,
+            });
+          } else {
+            productMap.set(obj.customType, { count: 1, value: itemCost });
+          }
         }
       }
     });
@@ -1141,22 +1150,31 @@ const Design = () => {
     totalCost += productsCost;
 
     // Labor cost is 10% of grey structure cost
-    const laborCost = greyStructureCost * 0.1;
+    const laborCost = greyStructureCost * 0.14;
     totalCost += greyStructureCost + laborCost;
+
+    // Convert map to array for UI rendering
+    const productDetails = Array.from(productMap.entries()).map(
+      ([name, data]) => ({
+        name: `${name} x${data.count}`,
+        value: data.value,
+      })
+    );
 
     setEstimatedCosts({
       totalCost,
       greyStructureCost,
       laborCost,
       productsCost,
-      productDetails, // Include product details for breakdown
+      productDetails,
+      wallCost,
     });
   };
 
   const costData = [
     { name: "Grey Structure", value: estimatedCosts.greyStructureCost },
     { name: "Labor Cost", value: estimatedCosts.laborCost },
-    { name: "Products Cost", value: estimatedCosts.productsCost },
+    { name: "Items Cost", value: estimatedCosts.productsCost },
   ];
 
   const toggleBoundaryVisibility = () => {
@@ -1784,7 +1802,7 @@ const Design = () => {
             icon={deleteIcon}
             label="Delete"
             onClick={deleteShape}
-            />
+          />
           <ActionButton
             icon={rotateIcon}
             label="Rotate"
@@ -1811,17 +1829,16 @@ const Design = () => {
             label="Export PDF"
             onClick={exportCanvasAsPDF}
           />
-<button
-  onClick={toggleBoundaryVisibility}
-  className={`w-full p-3 rounded-lg transition-colors ${
-    isBoundaryVisible ? "bg-green-500 text-white" : "bg-gray-400 text-black"
-  }`}
->
-  {isBoundaryVisible ? "Toggle Boundary" : "Toggle Boundary"}
-</button>
-
-
-
+          <button
+            onClick={toggleBoundaryVisibility}
+            className={`w-full p-3 rounded-lg transition-colors ${
+              isBoundaryVisible
+                ? "bg-green-500 text-white"
+                : "bg-gray-400 text-black"
+            }`}
+          >
+            {isBoundaryVisible ? "Toggle Boundary" : "Toggle Boundary"}
+          </button>
         </div>
       </div>
       {estimatedCosts.totalCost && (
@@ -1862,7 +1879,7 @@ const Design = () => {
               <div className="flex">
                 <div className="bg-[#2C3433] w-3 rounded-xl mr-4"></div>
                 <div>
-                  <h4 className="text-2xl text-gray-700">Products Cost</h4>
+                  <h4 className="text-2xl text-gray-700">Items Cost</h4>
                   <p className="text-2xl">
                     PKR {estimatedCosts.productsCost?.toLocaleString()}
                   </p>
@@ -1892,45 +1909,83 @@ const Design = () => {
               </PieChart>
             </ResponsiveContainer>
             {/* Summary Section */}
-            <div className="mt-16 bg-white p-6 rounded-xl shadow-md text-left ">
+            <div className="mt-16 bg-white p-6 rounded-xl shadow-md text-left">
               <h3 className="text-3xl font-semibold mb-6">Cost Summary</h3>
 
-              <div className="flex justify-between py-2 border-b">
+              {/* Grey Structure Cost - Expandable */}
+              <div
+                className="flex justify-between pt-2 border-b cursor-pointer"
+                onClick={() =>
+                  setShowGreyStructureDetails(!showGreyStructureDetails)
+                }
+              >
                 <span className="text-lg">Grey Structure Cost</span>
-                <span className="text-lg font-semibold">
-                  PKR {estimatedCosts.greyStructureCost.toLocaleString()}
-                </span>
+                <div className="flex items-center">
+                  <span className="text-lg font-semibold">
+                    PKR{" "}
+                    {estimatedCosts.greyStructureCost.toLocaleString(
+                      undefined,
+                      { maximumFractionDigits: 0 }
+                    )}
+                  </span>
+                  <span className="ml-3 text-5xl -mt-2">
+                    {showGreyStructureDetails ? "↑" : "↓"}
+                  </span>
+                </div>
               </div>
 
+              {/* Wall Cost Breakdown - Shown when Grey Structure Cost is expanded */}
+              {showGreyStructureDetails && (
+                <div className="mt-2 transition-all duration-300 pl-6">
+                  <div className="flex justify-between py-2 border-b">
+                    <span className="text-medium text-gray-600">Wall Cost</span>
+                    <span className="text-medium text-gray-600 font-semibold mr-10">
+                      PKR{" "}
+                      {estimatedCosts.wallCost.toLocaleString(undefined, {
+                        maximumFractionDigits: 0,
+                      })}
+                    </span>
+                  </div>
+                </div>
+              )}
+
+              {/* Labor Cost */}
               <div className="flex justify-between py-2 border-b">
                 <span className="text-lg">Labor Cost</span>
-                <span className="text-lg font-semibold">
-                  PKR {estimatedCosts.laborCost.toLocaleString()}
+                <span className="text-lg font-semibold mr-10">
+                  PKR{" "}
+                  {estimatedCosts.laborCost.toLocaleString(undefined, {
+                    maximumFractionDigits: 0,
+                  })}
                 </span>
               </div>
 
-              {/* Toggle Button */}
+              {/* Products Cost - Expandable */}
               <div
                 className="flex justify-between py-2 border-b cursor-pointer"
                 onClick={() => setShowProductDetails(!showProductDetails)}
               >
-                <span className="text-lg ">Products Cost</span>
-                <div className="flex items-center">
+                <span className="text-lg">Items Cost</span>
+                <div className="flex items-center ">
                   <span className="text-lg font-semibold">
-                    PKR {estimatedCosts.productsCost.toLocaleString()}
+                    PKR{" "}
+                    {estimatedCosts.productsCost.toLocaleString(undefined, {
+                      maximumFractionDigits: 0,
+                    })}
                   </span>
-                  <span className="ml-3 text-5xl">
+                  <span className="ml-3 text-5xl -mt-2">
                     {showProductDetails ? "↑" : "↓"}
                   </span>
                 </div>
               </div>
 
               {/* Display Individual Product Costs - Expandable */}
+              {/* Display Individual Product Costs - Expandable */}
               {showProductDetails &&
                 estimatedCosts.productDetails?.length > 0 && (
                   <div className="mt-4 transition-all duration-300">
                     <h4 className="text-2xl font-semibold mb-3">
-                      Product Breakdown:
+                      Items Cost Summary:
                     </h4>
                     {estimatedCosts.productDetails.map((product, index) => (
                       <div
@@ -1938,8 +1993,11 @@ const Design = () => {
                         className="flex justify-between py-2 border-b"
                       >
                         <span className="text-lg">{product.name}</span>
-                        <span className="text-lg font-semibold">
-                          PKR {product.value.toLocaleString()}
+                        <span className="text-lg font-semibold mr-10">
+                          PKR{" "}
+                          {product.value.toLocaleString(undefined, {
+                            maximumFractionDigits: 0,
+                          })}
                         </span>
                       </div>
                     ))}
