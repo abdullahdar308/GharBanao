@@ -23,7 +23,10 @@ const upload = multer({ storage });
 // Updated route with vendorProtect and proper vendorId assignment
 router.post("/add", vendorProtect, upload.single("image"), async (req, res) => {
   const { name, category, description, price } = req.body; // Remove vendorId from destructuring
-  const image = req.file ? req.file.path : null;
+  // const image = req.file ? req.file.path : null;
+  const image = req.file ? 
+    `${req.protocol}://${req.get('host')}/uploads/${req.file.filename}` : 
+    null;
 
   try {
     const product = new Product({
@@ -36,7 +39,10 @@ router.post("/add", vendorProtect, upload.single("image"), async (req, res) => {
     });
 
     await product.save();
-    res.status(201).json({ message: "Product added successfully", product });
+    res.status(201).json({ message: "Product added successfully", 
+      product,
+      image
+    });
   } catch (error) {
     res
       .status(500)
