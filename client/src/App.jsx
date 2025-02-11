@@ -26,6 +26,8 @@ import VendorInfo from "./components/VendorInfo.jsx";
 import VendorLogin from "./components/VendorLogin.jsx";
 import VendorOrders from "./components/VendorOrders.jsx";
 import ProductList from "./components/ProductList.jsx";
+import PrivateRoute from "./components/PrivateRoute.jsx";
+
 
 function App() {
   const { isAuthenticated, isAdminAuthenticated } = useAuth();
