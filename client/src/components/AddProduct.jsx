@@ -78,9 +78,9 @@ const AddProduct = () => {
                 <option value="Furniture">Furniture</option>
                 {/* <option value="Home Decor">Home Decor</option> */}
                 <option value="Electronics">Electronics</option>
-                <option value="Flooring">Electronics</option>
-                <option value="Decor">Electronics</option>
-                <option value="Kitchen Essentials">Electronics</option>
+                <option value="Wall Art">Wall Art</option>
+                <option value="Decor">Decor</option>
+                <option value="Kitchen Essentials">Kitchen Essentials</option>
               </select>
             </div>
             <div className="mt-12 flex flex-col mb-10">

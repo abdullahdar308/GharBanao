@@ -7,7 +7,7 @@ const CatalogueNav = ({ selectedCategory, setSelectedCategory }) => {
     "All",
     "Furniture",
     "Electronics",
-    "Flooring",
+    "Wall Art",
     "Decor",
     "Kitchen Essentials",
   ];
