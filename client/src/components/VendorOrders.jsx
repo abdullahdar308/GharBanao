@@ -19,7 +19,7 @@ const VendorOrders = () => {
       try {
         const token = localStorage.getItem("vendorToken");
         const response = await fetch(
-          "https://gharbanao-87pi.onrender.com/api/orders/vendor",
+          "http://localhost:3000/api/orders/vendor",
           {
             headers: { Authorization: `Bearer ${token}` },
           }
@@ -70,9 +70,9 @@ const VendorOrders = () => {
                   </span>
                   <span>PKR {item.price * item.quantity}</span>
                 </div>
-                <p className="text-sm text-gray-500">
+                {/* <p className="text-sm text-gray-500">
                   Vendor Product ID: {item.productId}
-                </p>
+                </p> */}
               </div>
             ))}
             <div className="mt-4 pt-2 border-t">

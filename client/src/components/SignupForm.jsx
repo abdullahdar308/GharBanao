@@ -18,6 +18,7 @@ const SignupForm = () => {
   const [errors, setErrors] = useState({});
   const [showPassword, setShowPassword] = useState(false);
   const [showRepeatPassword, setShowRepeatPassword] = useState(false);
+  const [loading, setLoading] = useState(false); // New state for loading
 
   const validateEmail = (email) => {
     const re = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -26,6 +27,8 @@ const SignupForm = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    if (loading) return; // Prevent multiple submissions
 
     const newErrors = {};
 
@@ -66,17 +69,20 @@ const SignupForm = () => {
       return;
     }
 
-    setErrors({}); // Clear errors if validation passes
+    setLoading(true); // Start loading
 
-    // Call registerUser with only relevant fields
     registerUser({ name, email, password })
       .then((res) => {
         if (res) {
           message.success("Registration successful!");
+          navigate("/"); // Redirect after successful signup
         }
       })
       .catch((err) => {
         message.error(err.message || "Registration failed!");
+      })
+      .finally(() => {
+        setLoading(false); // Stop loading after request is complete
       });
   };
 
@@ -178,8 +184,8 @@ const SignupForm = () => {
                 className="alert"
               />
             )}
-            <button type="submit" className="signup-button">
-              Sign up
+            <button type="submit" className="signup-button" disabled={loading}>
+              {loading ? "Signing up..." : "Sign up"}
             </button>
             <p>
               Already have an Account? <Link to="/login">Log in</Link>

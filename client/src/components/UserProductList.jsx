@@ -10,9 +10,9 @@ const UserProductList = ({ selectedCategory }) => {
   const dispatch = useDispatch();
   const [showAddToCartMessage, setShowAddToCartMessage] = useState(false);
 
-  const handleAddToCart = (e, id, name, price) => {
+  const handleAddToCart = (e, id, name, price, vendorId) => {
     e.stopPropagation();
-    dispatch(addToCart({ id, name, price, quantity: 1 }));
+    dispatch(addToCart({ id, name, price, vendorId, quantity: 1 }));
     setShowAddToCartMessage(true);
     setTimeout(() => setShowAddToCartMessage(false), 1000);
   };
@@ -22,7 +22,6 @@ const UserProductList = ({ selectedCategory }) => {
   };
 
   // Filter products by selected category
-  // Update the filtered products logic
   const filteredProducts = products.filter((product) =>
     selectedCategory === "All"
       ? true // Show all products
@@ -52,7 +51,7 @@ const UserProductList = ({ selectedCategory }) => {
               <div className="w-full h-[350px] flex justify-center items-center overflow-hidden">
                 <img
                   className="px-10 h-[300px] object-contain"
-                  src={`https://gharbanao-87pi.onrender.com/${product.image}`}
+                  src={`http://localhost:3000/${product.image}`}
                   alt={product.name}
                 />
               </div>
@@ -70,7 +69,8 @@ const UserProductList = ({ selectedCategory }) => {
                         e,
                         product._id,
                         product.name,
-                        product.price
+                        product.price,
+                        product.vendorId
                       )
                     }
                   >

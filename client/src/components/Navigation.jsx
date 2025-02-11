@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Button, Avatar } from "antd";
+import { Button, Avatar, message } from "antd";
 import { UserOutlined, MenuOutlined } from "@ant-design/icons";
 import { useAuth } from "../contexts/AuthContext";
 import { Link } from "react-router-dom";
@@ -8,12 +8,16 @@ import "../index.css";
 
 const Navigation = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isLoggingOut, setIsLoggingOut] = useState(false); // Add a state for logout loading
 
   const navigate = useNavigate();
   const { userData, logout, isAuthenticated } = useAuth();
 
   const handleLogout = async () => {
+    setIsLoggingOut(true); // Show "Logging out..."
     await logout();
+    message.success("You have successfully logged out!"); // Show success message
+    setIsLoggingOut(false); // Reset button text
   };
 
   useEffect(() => {

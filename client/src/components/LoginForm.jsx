@@ -31,6 +31,7 @@ const LoginForm = () => {
   const [isSendingOTP, setIsSendingOTP] = useState(false);
   const [isVerifyingOTP, setIsVerifyingOTP] = useState(false);
   const [isResettingPassword, setIsResettingPassword] = useState(false);
+  const [isLoggingIn, setIsLoggingIn] = useState(false); // Add loading state
 
   const validateEmail = (email) => {
     const re = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -59,8 +60,11 @@ const LoginForm = () => {
 
     setErrors({}); // Clear errors if validation passes
 
+    setIsLoggingIn(true); // Start loading state
+
     // Attempt to log in the user
     const success = await loginUser({ email, password });
+    setIsLoggingIn(false); // Stop loading state
 
     if (success) {
       navigate("/"); // Redirect to the homepage on successful login
@@ -113,7 +117,7 @@ const LoginForm = () => {
 
     try {
       const response = await fetch(
-        "https://gharbanao-87pi.onrender.com/api/auth/forgot-password",
+        "http://localhost:3000/api/auth/forgot-password",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -184,7 +188,7 @@ const LoginForm = () => {
 
     try {
       const response = await fetch(
-        "https://gharbanao-87pi.onrender.com/api/auth/verify-reset-otp",
+        "http://localhost:3000/api/auth/verify-reset-otp",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -221,7 +225,7 @@ const LoginForm = () => {
 
     try {
       const response = await fetch(
-        "https://gharbanao-87pi.onrender.com/api/auth/reset-password",
+        "http://localhost:3000/api/auth/reset-password",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -306,8 +310,12 @@ const LoginForm = () => {
                 className="alert"
               />
             )}
-            <button type="submit" className="signup-button">
-              Log in
+            <button
+              type="submit"
+              className="signup-button"
+              disabled={isLoggingIn}
+            >
+              {isLoggingIn ? "Logging in..." : "Log in"}
             </button>
             <p>
               Don't have an Account? <Link to="/signup">Sign up</Link>
