@@ -23,41 +23,12 @@ const upload = multer({ storage });
 
 // Route to add a product
 // Updated route with vendorProtect and proper vendorId assignment
-// router.post("/add", vendorProtect, upload.single("image"), async (req, res) => {
-//   const { name, category, description, price } = req.body; // Remove vendorId from destructuring
-//   // const image = req.file ? req.file.path : null;
-//   const image = req.file ? 
-//     `${req.protocol}://${req.get('host')}/uploads/${req.file.filename}` : 
-//     null;
-
-//   try {
-//     const product = new Product({
-//       name,
-//       category,
-//       description,
-//       price,
-//       image,
-//       vendorId: req.vendor._id, // Get vendorId from middleware
-//     });
-
-//     await product.save();
-//     res.status(201).json({ message: "Product added successfully", 
-//       product,
-//       image
-//     });
-//   } catch (error) {
-//     res
-//       .status(500)
-//       .json({ message: "Error adding product", error: error.message });
-//   }
-// });
-
-router.post("/add", async (req, res) => {
-  const { name, category, description, price } = req.body;
-  const imagePath = req.file.path;
-
-  // Convert image to Base64
-  const imageBase64 = fs.readFileSync(imagePath, { encoding: "base64" });
+router.post("/add", vendorProtect, upload.single("image"), async (req, res) => {
+  const { name, category, description, price } = req.body; // Remove vendorId from destructuring
+  // const image = req.file ? req.file.path : null;
+  const image = req.file ? 
+    `${req.protocol}://${req.get('host')}/uploads/${req.file.filename}` : 
+    null;
 
   try {
     const product = new Product({
@@ -65,15 +36,44 @@ router.post("/add", async (req, res) => {
       category,
       description,
       price,
-      image: imageBase64, // Storing Base64 in MongoDB
+      image,
+      vendorId: req.vendor._id, // Get vendorId from middleware
     });
 
     await product.save();
-    res.status(201).json({ message: "Product added successfully", product });
+    res.status(201).json({ message: "Product added successfully", 
+      product,
+      image
+    });
   } catch (error) {
-    res.status(500).json({ message: "Error adding product", error: error.message });
-  }
+    res
+      .status(500)
+      .json({ message: "Error adding product", error: error.message });
+  }
 });
+
+// router.post("/add", async (req, res) => {
+//   const { name, category, description, price } = req.body;
+//   const imagePath = req.file.path;
+
+//   // Convert image to Base64
+//   const imageBase64 = fs.readFileSync(imagePath, { encoding: "base64" });
+
+//   try {
+//     const product = new Product({
+//       name,
+//       category,
+//       description,
+//       price,
+//       image: imageBase64, // Storing Base64 in MongoDB
+//     });
+
+//     await product.save();
+//     res.status(201).json({ message: "Product added successfully", product });
+//   } catch (error) {
+//     res.status(500).json({ message: "Error adding product", error: error.message });
+//   }
+// });
 
 // Route to update a product by ID
 // Route to update a product by ID
