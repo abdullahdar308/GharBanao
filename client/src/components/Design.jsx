@@ -3,6 +3,9 @@ import * as fabric from "fabric";
 import { jsPDF } from "jspdf";
 import { useAuth } from "../contexts/AuthContext";
 
+import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from "recharts";
+import alertIcon from "../assets/alertIcon.svg";
+
 import wall from "../assets/Design-SVGs/WallIcon.svg";
 import door from "../assets/Design-SVGs/doorIcon.svg";
 import doubledoor from "../assets/Design-SVGs/DoubledoorIcon.svg";
@@ -37,7 +40,43 @@ const Design = () => {
   const [selectedObjectDetails, setSelectedObjectDetails] = useState(null);
   const [area, setArea] = useState("");
   const [isBoundaryVisible, setIsBoundaryVisible] = useState(false);
+  const [showProductDetails, setShowProductDetails] = useState(false);
 
+  const COLORS = ["#468378", "#2C3433", "#A8B0AF"];
+
+  const divRef = useRef(null);
+  const [divWidth, setDivWidth] = useState(0);
+  const [boundary, setBoundary] = useState({
+    x: 0,
+    y: 0,
+    width: 700, // Initial value will be updated
+    height: 660,
+  });
+  // Update boundary when divWidth changes
+  useEffect(() => {
+    setBoundary((prev) => ({
+      ...prev,
+      width: divWidth,
+    }));
+  }, [divWidth]);
+
+  useEffect(() => {
+    if (divRef.current) {
+      setDivWidth(divRef.current.clientWidth);
+      setBoundary((prev) => ({ ...prev, width: divRef.current.clientWidth }));
+    }
+
+    const handleResize = () => {
+      if (divRef.current) {
+        const newWidth = divRef.current.clientWidth;
+        // setDivWidth(newWidth);
+        setBoundary((prev) => ({ ...prev, width: newWidth }));
+      }
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
   };
@@ -46,24 +85,24 @@ const Design = () => {
   const toggleFurnitureDropdown = () =>
     setIsFurnitureDropdownOpen((prev) => !prev);
 
-  const boundary = {
-    x: 50,
-    y: 50,
-    width: 700,
-    height: 700,
-  };
+  // const boundary = {
+  //   x: 50,
+  //   y: 50,
+  //   width: 700,
+  //   height: 700,
+  // };
 
   const [actionStack, setActionStack] = useState([]);
 
   useEffect(() => {
-    if (canvasRef.current && !canvas) {
+    if (canvasRef.current && !canvas && divWidth > 0) {
       try {
         const fabricCanvas = new fabric.Canvas(canvasRef.current, {
-          height: 1000,
-          width: 1000,
+          width: divWidth,
+          height: boundary.height, // Use boundary.height instead of fixed 700
           backgroundColor: "#fff",
+          preserveObjectStacking: true,
         });
-
         fabricCanvas.on("object:added", (e) => {
           const object = e.target;
           object.set({
@@ -98,22 +137,28 @@ const Design = () => {
         const canvasHeight = fabricCanvas.height;
 
         // Create vertical grid lines
-        for (let i = gridSize; i < canvasWidth; i += gridSize) {
-          const verticalLine = new fabric.Line([i, 0, i, canvasHeight], {
+        for (let i = gridSize; i < divWidth; i += gridSize) {
+          const verticalLine = new fabric.Line([i, 0, i, boundary.height], {
             stroke: "#ddd",
             selectable: false,
-            visible: false, // Initially hidden
+            visible: false,
+            isGrid: true,
+            isVertical: true, // Custom property
+            initialX: i, // Store initial position
           });
           gridLines.push(verticalLine);
           fabricCanvas.add(verticalLine);
         }
 
         // Create horizontal grid lines
-        for (let j = gridSize; j < canvasHeight; j += gridSize) {
-          const horizontalLine = new fabric.Line([0, j, canvasWidth, j], {
+        for (let j = gridSize; j < boundary.height; j += gridSize) {
+          const horizontalLine = new fabric.Line([0, j, divWidth, j], {
             stroke: "#ddd",
             selectable: false,
-            visible: false, // Initially hidden
+            visible: false,
+            isGrid: true,
+            isVertical: false, // Custom property
+            initialY: j, // Store initial position
           });
           gridLines.push(horizontalLine);
           fabricCanvas.add(horizontalLine);
@@ -151,7 +196,58 @@ const Design = () => {
         canvas.dispose();
       }
     };
-  }, [canvas]);
+  }, [canvas, divWidth]);
+
+  // Then update your resize handler useEffect
+  useEffect(() => {
+    if (!canvas || !canvas.lowerCanvasEl || divWidth <= 0) return; // Ensure canvas is initialized
+
+    // Store current state before changes
+    const originalZoom = canvas.getZoom();
+    const originalPan = canvas.viewportTransform;
+
+    // Update canvas dimensions
+    canvas.setDimensions({
+      width: divWidth,
+      height: boundary.height,
+    });
+
+    // Reset zoom and pan after resize
+    canvas.setZoom(originalZoom);
+    canvas.viewportTransform = originalPan;
+    canvas.calcOffset(); // Recalculate offsets
+
+    // Update boundary rectangle
+    if (canvas.boundaryRect) {
+      canvas.boundaryRect.set({
+        width: divWidth,
+        height: boundary.height,
+      });
+      canvas.boundaryRect.setCoords();
+    }
+
+    // Update grid lines
+    canvas.forEachObject((obj) => {
+      if (obj.isGrid) {
+        if (obj.isVertical) {
+          obj.set({
+            x1: obj.initialX,
+            x2: obj.initialX,
+            y2: boundary.height,
+          });
+        } else {
+          obj.set({
+            y1: obj.initialY,
+            y2: obj.initialY,
+            x2: divWidth,
+          });
+        }
+        obj.setCoords();
+      }
+    });
+
+    canvas.renderAll();
+  }, [divWidth, canvas, boundary.height]);
 
   const addWall = () => {
     if (!canvas) return;
@@ -1005,64 +1101,69 @@ const Design = () => {
     };
   }, [canvas]);
 
-  const estimateCosts = (area) => {
+  const [estimatedCosts, setEstimatedCosts] = useState({
+    totalCost: null,
+    greyStructureCost: null,
+    laborCost: null,
+    productsCost: null,
+  });
+
+  // Modify your estimateCosts function
+  const estimateCosts = () => {
     if (!canvas) return;
 
-    const ratePerSqFt = 1588; // Cost per square foot for gray structure
+    const ratePerSqFt = 1588;
     const allObjects = canvas.getObjects();
-    const costSummary = {};
     let totalCost = 0;
+    let greyStructureCost = area * ratePerSqFt;
+    let productsCost = 0;
+    let productDetails = []; // Stores individual product costs
 
-    // Loop through objects to calculate individual costs
     allObjects.forEach((obj) => {
       if (obj.customType) {
         let itemCost = 0;
 
         if (obj.customType === "Wall") {
-          // Calculate wall cost based on dimensions
+          // Wall costs added to grey structure
           const width = obj.scaleX * obj.width;
           const height = obj.scaleY * obj.height;
           const area = width * height;
           itemCost = area * obj.baseCostPerPixel;
+          greyStructureCost += itemCost;
         } else {
-          // Fixed cost for other objects
+          // Other objects added to product cost
           itemCost = obj.cost || 0;
-        }
+          productsCost += itemCost;
 
-        // Add to summary
-        if (!costSummary[obj.customType]) {
-          costSummary[obj.customType] = { count: 0, totalCost: 0 };
+          // Store product details
+          productDetails.push({
+            name: obj.customType || "Unknown Product",
+            value: itemCost,
+          });
         }
-        costSummary[obj.customType].count += 1;
-        costSummary[obj.customType].totalCost += itemCost;
-        totalCost += itemCost;
       }
     });
 
-    // Calculate gray structure cost
-    const grayStructureCost = area * ratePerSqFt;
-    totalCost += grayStructureCost;
+    totalCost += productsCost;
 
-    console.log("Cost Summary:", costSummary);
-    console.log("Gray Structure Cost:", grayStructureCost);
-    console.log("Total Cost:", totalCost);
+    // Labor cost is 10% of grey structure cost
+    const laborCost = greyStructureCost * 0.1;
+    totalCost += greyStructureCost + laborCost;
 
-    // Display results
-    const breakdown = Object.entries(costSummary)
-      .map(
-        ([type, { count, totalCost }]) =>
-          `${type}: ${count} item(s) = Rs ${totalCost.toFixed(2)}`
-      )
-      .join("\n");
-
-    alert(
-      `Gray Structure Cost: Rs ${grayStructureCost.toFixed(
-        2
-      )}\n\nCost Breakdown:\n${breakdown}\n\nTotal Cost: Rs ${totalCost.toFixed(
-        2
-      )}`
-    );
+    setEstimatedCosts({
+      totalCost,
+      greyStructureCost,
+      laborCost,
+      productsCost,
+      productDetails, // Include product details for breakdown
+    });
   };
+
+  const costData = [
+    { name: "Grey Structure", value: estimatedCosts.greyStructureCost },
+    { name: "Labor Cost", value: estimatedCosts.laborCost },
+    { name: "Products Cost", value: estimatedCosts.productsCost },
+  ];
 
   const toggleBoundaryVisibility = () => {
     if (!canvas || !canvas.boundaryRect) return;
@@ -1327,10 +1428,10 @@ const Design = () => {
   );
 
   const DropdownButton = ({ label, isOpen, onToggle, children }) => (
-    <div className="relative w-full">
+    <div className="w-full relative flex justify-center">
       <button
         onClick={onToggle}
-        className="w-full p-3 bg-[#d4e6e4] hover:bg-white text-gray-800 rounded-xl flex justify-between items-center font-medium"
+        className="w-full p-3 bg-[#d4e6e4] hover:bg-white text-gray-800 rounded-xl flex justify-center gap-7 items-center font-medium"
       >
         {label}
         <span
@@ -1342,7 +1443,7 @@ const Design = () => {
         </span>
       </button>
       {isOpen && (
-        <div className="absolute left-full top-0 ml-2 w-48 bg-white rounded-lg shadow-xl z-10">
+        <div className="sm:absolute sm:left-full top-8 sm:top-0 ml-2 w-48 bg-white rounded-lg shadow-xl z-10">
           {children}
         </div>
       )}
@@ -1384,15 +1485,8 @@ const Design = () => {
     setShowNameModal,
   }) => (
     <div className="pt-4 border-t border-gray-600 space-y-4">
-      <button
-        onClick={() => setShowNameModal(true)}
-        className="w-full py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors"
-      >
-        Save Design
-      </button>
-
       {designs.length > 0 ? (
-        <div className="space-y-4">
+        <div className="space-y-4 border-b-[0.5px]  pb-7">
           <select
             value={selectedDesign}
             onChange={(e) => setSelectedDesign(e.target.value)}
@@ -1426,6 +1520,12 @@ const Design = () => {
       ) : (
         <p className="text-gray-400 text-center">No saved designs</p>
       )}
+      <button
+        onClick={() => setShowNameModal(true)}
+        className="w-full py-2 bg-[#468378] hover:bg-[#4b9d8e] text-white rounded-lg transition-colors mt-7"
+      >
+        Save Design
+      </button>
     </div>
   );
 
@@ -1435,18 +1535,32 @@ const Design = () => {
     setDesignName,
     onSave,
     onCancel,
-  }) =>
-    show && (
+  }) => {
+    const inputRef = useRef(null);
+
+    useEffect(() => {
+      if (show && inputRef.current) {
+        inputRef.current.focus(); // Auto-focus the input when modal appears
+      }
+    }, [show]);
+
+    if (!show) return null;
+
+    return (
       <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
         <div className="bg-white rounded-xl p-6 w-full max-w-md space-y-4">
           <h3 className="text-xl font-bold">Save Design</h3>
+
+          {/* Keep reference to input field */}
           <input
+            ref={inputRef} // Attach reference
             type="text"
             value={designName}
             onChange={(e) => setDesignName(e.target.value)}
             placeholder="Enter design name"
-            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:[#468378]"
           />
+
           <div className="flex justify-end space-x-3">
             <button
               onClick={onCancel}
@@ -1457,7 +1571,7 @@ const Design = () => {
             <button
               onClick={onSave}
               disabled={!designName.trim()}
-              className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
+              className="px-4 py-2 bg-[#468378] hover:bg-[#4b9d8e] text-white rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
             >
               Save
             </button>
@@ -1465,68 +1579,174 @@ const Design = () => {
         </div>
       </div>
     );
+  };
+
+  // Add this new component inside your Design component
+  const CostDisplayModal = () => (
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+      <div className="bg-white rounded-2xl shadow-lg p-8 w-full max-w-4xl">
+        <h2 className="text-4xl font-bold mb-8 text-center">Cost Estimation</h2>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="space-y-6">
+            <div className="bg-[#D4E0E0] p-6 rounded-xl">
+              <h3 className="text-2xl font-semibold mb-4">
+                Total Estimated Cost
+              </h3>
+              <p className="text-3xl font-bold">
+                PKR {estimatedCosts.totalCost.toLocaleString()}
+              </p>
+            </div>
+
+            <div className="bg-[#FFDEDE] p-6 rounded-xl">
+              <div className="flex items-start mb-4">
+                <img
+                  src={alertIcon}
+                  alt="alert"
+                  className="w-6 h-6 mt-1 mr-3"
+                />
+                <p className="text-lg">
+                  Note: Prices may vary by up to 5% due to market fluctuations
+                </p>
+              </div>
+              <div className="text-xl font-medium">
+                PKR {(estimatedCosts.totalCost * 0.95).toLocaleString()} -{" "}
+                {(estimatedCosts.totalCost * 1.05).toLocaleString()}
+              </div>
+            </div>
+
+            <div className="space-y-4">
+              <div className="flex justify-between items-center">
+                <span className="flex items-center">
+                  <span className="w-4 h-4 bg-[#468378] mr-2 rounded-sm"></span>
+                  Grey Structure
+                </span>
+                <span>
+                  PKR {estimatedCosts.greyStructureCost.toLocaleString()}
+                </span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="flex items-center">
+                  <span className="w-4 h-4 bg-[#2C3433] mr-2 rounded-sm"></span>
+                  Finishing
+                </span>
+                <span>PKR {estimatedCosts.finishingCost.toLocaleString()}</span>
+              </div>
+            </div>
+          </div>
+
+          <div className="h-80">
+            <ResponsiveContainer width="100%" height="100%">
+              <PieChart>
+                <Pie
+                  data={[
+                    {
+                      name: "Grey Structure",
+                      value: estimatedCosts.greyStructureCost,
+                    },
+                    { name: "Finishing", value: estimatedCosts.finishingCost },
+                  ]}
+                  cx="50%"
+                  cy="50%"
+                  outerRadius={80}
+                  innerRadius={60}
+                  paddingAngle={5}
+                  dataKey="value"
+                >
+                  {[COLORS[0], COLORS[1]].map((color, index) => (
+                    <Cell key={index} fill={color} />
+                  ))}
+                </Pie>
+                <Tooltip />
+              </PieChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+
+        <button
+          onClick={() => setShowCostModal(false)}
+          className="mt-6 w-full py-3 bg-[#468378] text-white rounded-xl font-semibold hover:bg-[#36695e] transition-colors"
+        >
+          Close
+        </button>
+      </div>
+    </div>
+  );
 
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="min-h-screen">
       <Navigation />
 
       <div className="flex flex-col lg:flex-row gap-6 max-w-[1920px] px-4 lg:px-8 xl:px-16 py-8 mx-auto">
         {/* Left Sidebar */}
-        <div className="w-full lg:w-64 xl:w-80 bg-[#2C3433] rounded-2xl p-6 space-y-6">
-          <div className="grid grid-cols-2 gap-4">
-            {/* Wall Button */}
-            <SidebarButton label="Wall" onClick={addWall} />
+        {/* Left Sidebar */}
+        <div className="w-full sm:w-96 xl:w-96 bg-[#2C3433] rounded-2xl p-6 space-y-8">
+          {/* 🏗️ Items Section */}
+          <div className="space-y-6">
+            <div className="grid grid-cols-2 gap-4">
+              {/* Wall Button */}
+              <SidebarButton label="Wall" onClick={addWall} />
 
-            {/* Door Dropdown */}
-            <div className="relative">
-              <DropdownButton
-                label="Door"
-                isOpen={isDoorDropdownOpen}
-                onToggle={toggleDoorDropdown}
-              >
-                <DropdownItem onClick={addDoor}>Single Door</DropdownItem>
-                <DropdownItem onClick={addDoubleDoor}>Double Door</DropdownItem>
-              </DropdownButton>
+              {/* Door Dropdown */}
+              <div className="flex justify-center">
+                <DropdownButton
+                  label="Door"
+                  isOpen={isDoorDropdownOpen}
+                  onToggle={toggleDoorDropdown}
+                >
+                  <DropdownItem onClick={addDoor}>Single Door</DropdownItem>
+                  <DropdownItem onClick={addDoubleDoor}>
+                    Double Door
+                  </DropdownItem>
+                </DropdownButton>
+              </div>
+
+              {/* Window Button */}
+              <SidebarButton label="Window" onClick={addWindow} />
+
+              {/* Furniture Dropdown */}
+              <div className="relative">
+                <DropdownButton
+                  label="Furniture"
+                  isOpen={isFurnitureDropdownOpen}
+                  onToggle={toggleFurnitureDropdown}
+                >
+                  <DropdownItem onClick={addBed}>Bed</DropdownItem>
+                  <DropdownItem onClick={addChair}>Chair</DropdownItem>
+                  <DropdownItem onClick={addCouch}>Couch</DropdownItem>
+                  <DropdownItem onClick={addTable}>Table</DropdownItem>
+                  <DropdownItem onClick={addDinnerTable}>
+                    Dinner Table
+                  </DropdownItem>
+                </DropdownButton>
+              </div>
+
+              {/* Other Items */}
+              {[
+                { label: "Stairs", action: addStairs },
+                { label: "Car", action: addCar },
+                { label: "Toilet", action: addToilet },
+                { label: "Sink", action: addSink },
+                { label: "Stove", action: addStove },
+                { label: "Bath Tub", action: addBathtub },
+                { label: "Text", action: addText },
+              ].map((item) => (
+                <SidebarButton
+                  key={item.label}
+                  label={item.label}
+                  onClick={item.action}
+                />
+              ))}
             </div>
-
-            <SidebarButton label="Window" onClick={addWindow} />
-
-            {/* Furniture Dropdown */}
-            <div className="relative">
-              <DropdownButton
-                label="Furniture"
-                isOpen={isFurnitureDropdownOpen}
-                onToggle={toggleFurnitureDropdown}
-              >
-                <DropdownItem onClick={addBed}>Bed</DropdownItem>
-                <DropdownItem onClick={addChair}>Chair</DropdownItem>
-                <DropdownItem onClick={addCouch}>Couch</DropdownItem>
-                <DropdownItem onClick={addTable}>Table</DropdownItem>
-                <DropdownItem onClick={addDinnerTable}>
-                  Dinner Table
-                </DropdownItem>
-              </DropdownButton>
-            </div>
-
-            {[
-              { label: "Stairs", action: addStairs },
-              { label: "Car", action: addCar },
-              { label: "Toilet", action: addToilet },
-              { label: "Sink", action: addSink },
-              { label: "Stove", action: addStove },
-              { label: "Bath Tub", action: addBathtub },
-              { label: "Text", action: addText },
-            ].map((item) => (
-              <SidebarButton
-                key={item.label}
-                label={item.label}
-                onClick={item.action}
-              />
-            ))}
           </div>
 
-          {/* Area Input Section */}
-          <div className="space-y-4 pt-4 border-t border-gray-600">
+          {/* 💰 Cost Estimation Section */}
+          <div className="space-y-4 rounded-lg px-4 py-6  border-gray-500 bg-[#384e50]">
+            <h3 className="text-lg font-semibold text-white">
+              Cost Estimation
+            </h3>
+
+            {/* Area Input */}
             <div className="space-y-2">
               <label className="text-white text-sm font-medium">
                 Area (sq ft)
@@ -1539,67 +1759,84 @@ const Design = () => {
                 className="w-full px-3 py-2 rounded-lg bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
+
+            {/* Estimate Button */}
             <button
               onClick={handleEstimateCosts}
-              className="w-full py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors"
+              className="w-full py-2 bg-[#468378] hover:bg-[#4b9d8e] text-white rounded-lg transition-colors"
             >
               Estimate Costs
             </button>
           </div>
 
-          {/* Selected Object Details */}
-          {selectedObjectDetails && (
-            <div className="p-4 bg-gray-800 rounded-lg text-white space-y-2">
-              <h3 className="font-bold text-lg border-b pb-2">
-                Object Details
-              </h3>
-              <DetailItem
-                label="Type"
-                value={selectedObjectDetails.customType}
-              />
-              <DetailItem
-                label="Width"
-                value={`${selectedObjectDetails.width}px`}
-              />
-              <DetailItem
-                label="Height"
-                value={`${selectedObjectDetails.height}px`}
-              />
-            </div>
-          )}
+          {/* 🗂️ Save/Load Section */}
+          <div className="space-y-6 pt-4 border-gray-500">
+            {/* Design List & Controls */}
+            <DesignManagementSection
+              designs={designs}
+              selectedDesign={selectedDesign}
+              setSelectedDesign={setSelectedDesign}
+              loadDesign={loadDesign}
+              deleteDesign={deleteDesign}
+              setShowNameModal={setShowNameModal}
+            />
 
-          {/* Design Management */}
-          <DesignManagementSection
-            designs={designs}
-            selectedDesign={selectedDesign}
-            setSelectedDesign={setSelectedDesign}
-            loadDesign={loadDesign}
-            deleteDesign={deleteDesign}
-            setShowNameModal={setShowNameModal}
-          />
-
-          {/* Save Design Modal */}
-          <SaveDesignModal
-            show={showNameModal}
-            designName={designName}
-            setDesignName={setDesignName}
-            onSave={handleSaveConfirm}
-            onCancel={() => setShowNameModal(false)}
-          />
+            {/* Save Design Modal */}
+            <SaveDesignModal
+              show={showNameModal}
+              designName={designName}
+              setDesignName={setDesignName}
+              onSave={handleSaveConfirm}
+              onCancel={() => setShowNameModal(false)}
+            />
+            {/* Selected Object Details */}
+            {selectedObjectDetails && (
+              <div className="p-4 bg-[#384e50] rounded-lg text-white space-y-2">
+                <h3 className="font-bold text-lg border-b pb-2">
+                  Object Details
+                </h3>
+                <DetailItem
+                  label="Type"
+                  value={selectedObjectDetails.customType}
+                />
+                <DetailItem
+                  label="Width"
+                  value={`${selectedObjectDetails.width}px`}
+                />
+                <DetailItem
+                  label="Height"
+                  value={`${selectedObjectDetails.height}px`}
+                />
+              </div>
+            )}
+          </div>
         </div>
 
         {/* Main Canvas Area */}
-        <div className="flex-1 bg-[#dfe8e6] rounded-2xl p-4 lg:p-8">
-          <div className="relative w-[600px] h-full min-h-[600px]">
+        <div
+          className="flex-1 bg-[#dfe8e6] rounded-2xl p-4 lg:p-8"
+          ref={divRef}
+        >
+          {/* <p>Inner div width: {divWidth}px</p>
+          <p>Boundary width: {boundary.width}px</p> */}
+          {/* In your JSX for the canvas container */}
+          <div
+            className="relative flex justify-center"
+            style={{
+              width: "100%",
+              height: `${boundary.height}px`,
+              // minHeight: "700px",
+            }}
+          >
             <canvas
               ref={canvasRef}
-              className="w-[600px] h-full rounded-xl shadow-lg"
+              className="z-10 w-full h-full rounded-xl shadow-lg"
             />
           </div>
         </div>
 
         {/* Right Sidebar */}
-        <div className="w-full lg:w-32 xl:w-40 bg-[#2C3433] rounded-2xl p-4 space-y-4">
+        <div className="w-full lg:w-32 xl:w-40 bg-[#2C3433] rounded-2xl p-4 space-y-4 lg:flex lg:flex-col lg:justify-center">
           <ActionButton
             icon={deleteIcon}
             label="Delete"
@@ -1639,6 +1876,131 @@ const Design = () => {
           </button>
         </div>
       </div>
+      {estimatedCosts.totalCost && (
+        <div className="max-w-[1920px] m-auto">
+          <div className="mt-20 bg-gray-100 mb-9 md:mx-44 p-10 pt-12 rounded-2xl shadow-md text-center ">
+            <h2 className="text-5xl font-bold mb-14">Estimated Costs</h2>
+            {/* Total Cost */}
+            <h3 className="text-3xl font-semibold bg-[#D4E0E0] px-8 py-5 rounded-xl mt-4 inline">
+              Total Cost: PKR {estimatedCosts.totalCost.toLocaleString()}
+            </h3>
+            {/* Cost Breakdown */}
+            <div className="mt-14 flex justify-center gap-40">
+              {/* Grey Structure Cost */}
+              <div className="flex">
+                <div className="bg-[#468378] w-3 rounded-xl mr-4"></div>
+                <div>
+                  <h4 className="text-2xl text-gray-700">
+                    Grey Structure Cost
+                  </h4>
+                  <p className="text-2xl">
+                    PKR {estimatedCosts.greyStructureCost?.toLocaleString()}
+                  </p>
+                </div>
+              </div>
+
+              {/* Labor Cost */}
+              <div className="flex">
+                <div className="bg-[#A8B0AF] w-3 rounded-xl mr-4"></div>
+                <div>
+                  <h4 className="text-2xl text-gray-700">Labor Cost</h4>
+                  <p className="text-2xl">
+                    PKR {estimatedCosts.laborCost?.toLocaleString()}
+                  </p>
+                </div>
+              </div>
+
+              {/* Products Cost */}
+              <div className="flex">
+                <div className="bg-[#2C3433] w-3 rounded-xl mr-4"></div>
+                <div>
+                  <h4 className="text-2xl text-gray-700">Products Cost</h4>
+                  <p className="text-2xl">
+                    PKR {estimatedCosts.productsCost?.toLocaleString()}
+                  </p>
+                </div>
+              </div>
+            </div>
+            {/* Pie Chart */}
+            <ResponsiveContainer width="100%" height={300} className="mt-10">
+              <PieChart>
+                <Pie
+                  data={costData}
+                  cx="50%"
+                  cy="50%"
+                  labelLine={false}
+                  outerRadius={125}
+                  fill="#8884d8"
+                  dataKey="value"
+                >
+                  {costData.map((entry, index) => (
+                    <Cell
+                      key={`cell-${index}`}
+                      fill={COLORS[index % COLORS.length]}
+                    />
+                  ))}
+                </Pie>
+                <Tooltip />
+              </PieChart>
+            </ResponsiveContainer>
+            {/* Summary Section */}
+            <div className="mt-16 bg-white p-6 rounded-xl shadow-md text-left ">
+              <h3 className="text-3xl font-semibold mb-6">Cost Summary</h3>
+
+              <div className="flex justify-between py-2 border-b">
+                <span className="text-lg">Grey Structure Cost</span>
+                <span className="text-lg font-semibold">
+                  PKR {estimatedCosts.greyStructureCost.toLocaleString()}
+                </span>
+              </div>
+
+              <div className="flex justify-between py-2 border-b">
+                <span className="text-lg">Labor Cost</span>
+                <span className="text-lg font-semibold">
+                  PKR {estimatedCosts.laborCost.toLocaleString()}
+                </span>
+              </div>
+
+              {/* Toggle Button */}
+              <div
+                className="flex justify-between py-2 border-b cursor-pointer"
+                onClick={() => setShowProductDetails(!showProductDetails)}
+              >
+                <span className="text-lg ">Products Cost</span>
+                <div className="flex items-center">
+                  <span className="text-lg font-semibold">
+                    PKR {estimatedCosts.productsCost.toLocaleString()}
+                  </span>
+                  <span className="ml-3 text-5xl">
+                    {showProductDetails ? "↑" : "↓"}
+                  </span>
+                </div>
+              </div>
+
+              {/* Display Individual Product Costs - Expandable */}
+              {showProductDetails &&
+                estimatedCosts.productDetails?.length > 0 && (
+                  <div className="mt-4 transition-all duration-300">
+                    <h4 className="text-2xl font-semibold mb-3">
+                      Product Breakdown:
+                    </h4>
+                    {estimatedCosts.productDetails.map((product, index) => (
+                      <div
+                        key={index}
+                        className="flex justify-between py-2 border-b"
+                      >
+                        <span className="text-lg">{product.name}</span>
+                        <span className="text-lg font-semibold">
+                          PKR {product.value.toLocaleString()}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                )}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
