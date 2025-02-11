@@ -50,7 +50,7 @@ function App() {
         <Route path="/Catalogue" element={<Catalogue />} />
         <Route path="/catalogue/:productName" element={<ProductDetail />} />
         <Route path="/Cart" element={<Cart />} />
-        <Route path="/Design" element={!isAuthenticated ? <LoginForm /> : <Navigate to="/" />} 
+        <Route path="/Design" element={!isAuthenticated ? <LoginForm /> : <Navigate to="/Design" />} 
         />
 
         <Route path="/vendor/login" element={<VendorLogin />} />
