@@ -85,12 +85,6 @@ const Design = () => {
   const toggleFurnitureDropdown = () =>
     setIsFurnitureDropdownOpen((prev) => !prev);
 
-  // const boundary = {
-  //   x: 50,
-  //   y: 50,
-  //   width: 700,
-  //   height: 700,
-  // };
 
   const [actionStack, setActionStack] = useState([]);
 
@@ -272,7 +266,7 @@ const Design = () => {
 
       fabricImg.customType = "Wall";
       fabricImg.baseCostPerPixel = 27;
-      fabricImg.scaleToWidth(400); // Set desired width
+      fabricImg.scaleToWidth(30); // Set desired width
       fabricImg.scaleToHeight(15); // Set desired height
       canvas.add(fabricImg);
       canvas.setActiveObject(fabricImg);
@@ -310,8 +304,8 @@ const Design = () => {
       });
       fabricImg.customType = "Door";
       fabricImg.cost = 15000;
-      fabricImg.scaleToWidth(50);
-      fabricImg.scaleToHeight(100);
+      fabricImg.scaleToWidth(40);
+      fabricImg.scaleToHeight(40);
       canvas.add(fabricImg);
       console.log("Door SVG added to canvas");
 
@@ -344,8 +338,8 @@ const Design = () => {
       });
       fabricImg.customType = "Double Door";
       fabricImg.cost = 25000;
-      fabricImg.scaleToWidth(100);
-      fabricImg.scaleToHeight(100);
+      fabricImg.scaleToWidth(40);
+      fabricImg.scaleToHeight(40);
       canvas.add(fabricImg);
       console.log("Double Door SVG added to canvas");
 
@@ -378,8 +372,8 @@ const Design = () => {
       });
       fabricImg.customType = "Bed";
       fabricImg.cost = 60000;
-      fabricImg.scaleToWidth(100);
-      fabricImg.scaleToHeight(100);
+      fabricImg.scaleToWidth(40);
+      fabricImg.scaleToHeight(40);
       canvas.add(fabricImg);
       console.log("Bed SVG added to canvas");
 
@@ -413,10 +407,10 @@ const Design = () => {
       });
       fabricImg.customType = "Stairs";
       fabricImg.cost = 70000;
-      fabricImg.scaleToWidth(50);
-      fabricImg.scaleToHeight(200);
+      fabricImg.scaleToWidth(70);
+      fabricImg.scaleToHeight(50);
       canvas.add(fabricImg);
-      fabricImg.bringToFront();
+      // fabricImg.bringToFront();
       fabricImg.set({ selectable: true, evented: true });
       canvas.setActiveObject(fabricImg);
       canvas.renderAll();
@@ -452,7 +446,7 @@ const Design = () => {
       fabricImg.customType = "Table";
       fabricImg.cost = 18000;
       fabricImg.scaleToWidth(50);
-      fabricImg.scaleToHeight(200);
+      fabricImg.scaleToHeight(50);
       canvas.add(fabricImg);
       fabricImg.bringToFront();
       fabricImg.set({ selectable: true, evented: true });
@@ -488,8 +482,8 @@ const Design = () => {
       });
       fabricImg.customType = "Chair";
       fabricImg.cost = 7000;
-      fabricImg.scaleToWidth(50);
-      fabricImg.scaleToHeight(50);
+      fabricImg.scaleToWidth(40);
+      fabricImg.scaleToHeight(40);
       canvas.add(fabricImg);
       console.log("Chair SVG added to canvas");
 
@@ -522,8 +516,8 @@ const Design = () => {
       });
       fabricImg.customType = "Couch";
       fabricImg.cost = 30000;
-      fabricImg.scaleToWidth(150);
-      fabricImg.scaleToHeight(100);
+      fabricImg.scaleToWidth(50);
+      fabricImg.scaleToHeight(50);
       canvas.add(fabricImg);
       console.log("Couch SVG added to canvas");
 
@@ -556,8 +550,8 @@ const Design = () => {
       });
       fabricImg.customType = "Dinner Table";
       fabricImg.cost = 40000;
-      fabricImg.scaleToWidth(150);
-      fabricImg.scaleToHeight(100);
+      fabricImg.scaleToWidth(70);
+      fabricImg.scaleToHeight(70);
       canvas.add(fabricImg);
       console.log("Dinner Table SVG added to canvas");
 
@@ -624,8 +618,8 @@ const Design = () => {
       });
       fabricImg.customType = "Sink";
       fabricImg.cost = 8000;
-      fabricImg.scaleToWidth(80);
-      fabricImg.scaleToHeight(80);
+      fabricImg.scaleToWidth(40);
+      fabricImg.scaleToHeight(40);
       canvas.add(fabricImg);
       console.log("Sink SVG added to canvas");
 
@@ -658,8 +652,8 @@ const Design = () => {
       });
       fabricImg.customType = "Stove";
       fabricImg.cost = 22000;
-      fabricImg.scaleToWidth(100);
-      fabricImg.scaleToHeight(80);
+      fabricImg.scaleToWidth(50);
+      fabricImg.scaleToHeight(50);
       canvas.add(fabricImg);
       console.log("Stove SVG added to canvas");
 
@@ -692,8 +686,8 @@ const Design = () => {
       });
       fabricImg.customType = "Bath Tub";
       fabricImg.cost = 60000;
-      fabricImg.scaleToWidth(150);
-      fabricImg.scaleToHeight(80);
+      fabricImg.scaleToWidth(50);
+      fabricImg.scaleToHeight(50);
       canvas.add(fabricImg);
       console.log("Bathtub SVG added to canvas");
 
@@ -726,8 +720,8 @@ const Design = () => {
       });
       fabricImg.customType = "Car";
       fabricImg.cost = 2000000;
-      fabricImg.scaleToWidth(100);
-      fabricImg.scaleToHeight(100);
+      fabricImg.scaleToWidth(60);
+      fabricImg.scaleToHeight(60);
       canvas.add(fabricImg);
       console.log("Car SVG added to canvas");
 
@@ -760,8 +754,8 @@ const Design = () => {
       });
       fabricImg.customType = "Window";
       fabricImg.cost = 12000;
-      fabricImg.scaleToWidth(50);
-      fabricImg.scaleToHeight(50);
+      fabricImg.scaleToWidth(20);
+      fabricImg.scaleToHeight(20);
       canvas.add(fabricImg);
       console.log("Window SVG added to canvas");
 
@@ -782,11 +776,11 @@ const Design = () => {
     const randomLeft = Math.random() * (boundary.width - 100) + boundary.x;
     const randomTop = Math.random() * (boundary.height - 100) + boundary.y;
 
-    const text = new fabric.Textbox("Editable Text", {
-      fontFamily: "Bungee Inline",
+    const text = new fabric.Textbox("Type here", {
+      fontFamily:`"Consolas", "Courier New", monospace`,
       left: randomLeft,
       top: randomTop,
-      // width: 150,
+      width: 100,
       fontSize: 20,
       id: `text-${Date.now()}`,
     });
@@ -1060,7 +1054,7 @@ const Design = () => {
 
     pdf.addImage(dataURL, "PNG", 0, 0, canvas.width, canvas.height);
 
-    pdf.save("canvas-design.pdf");
+    pdf.save("floor-plan.pdf");
   };
 
   const handleObjectSelection = () => {
@@ -1186,57 +1180,6 @@ const Design = () => {
     }
   };
 
-  // const saveDesign = async (designName, canvasJson) => {
-  //   try {
-  //     // Retrieve JWT token from localStorage (or wherever you are storing it after login)
-  //     const yourJWTToken = localStorage.getItem("jwtToken"); // Adjust if using sessionStorage or cookies
-
-  //     if (!yourJWTToken) {
-  //       console.error("User is not authenticated. Token is missing.");
-  //       alert("Please log in to save your design.");
-  //       return;
-  //     }
-
-  //     // Make the API call to save the design
-  //     const response = await fetch("/api/design/save", {
-  //       method: "POST",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //         Authorization: `Bearer ${yourJWTToken}`,
-  //       },
-  //       body: JSON.stringify({
-  //         designName,
-  //         canvasData: canvasJson,
-  //       }),
-  //     });
-
-  //     const data = await response.json();
-
-  //     if (response.ok) {
-  //       alert("Design saved successfully!");
-  //       console.log("Server Response:", data);
-  //     } else {
-  //       console.error("Error saving design:", data.message);
-  //       alert(`Error saving design: ${data.message}`);
-  //     }
-  //   } catch (error) {
-  //     console.error("Error saving design:", error.message);
-  //     alert("An unexpected error occurred while saving the design.");
-  //   }
-  // };
-
-  //   const saveDesign = async () => {
-  //     const canvasJSON = canvas.toJSON(); // Get Fabric.js JSON data
-
-  //     const response = await fetch('http://localhost:3000/api/designs', { // Adjust port if needed
-  //       method: 'POST',
-  //       headers: { 'Content-Type': 'application/json' },
-  //       body: JSON.stringify({ name: 'My Floor Plan', data: canvasJSON })
-  //   });
-
-  //     const result = await response.json();
-  //     console.log(result);
-  // };
   const { userData } = useAuth();
   const { token, logout } = useAuth(); // Get token from context
 
@@ -1841,7 +1784,7 @@ const Design = () => {
             icon={deleteIcon}
             label="Delete"
             onClick={deleteShape}
-          />
+            />
           <ActionButton
             icon={rotateIcon}
             label="Rotate"
@@ -1868,12 +1811,17 @@ const Design = () => {
             label="Export PDF"
             onClick={exportCanvasAsPDF}
           />
-          <button
-            onClick={toggleBoundaryVisibility}
-            className="w-full p-3 bg-[#deedea] hover:bg-white text-black rounded-lg transition-colors"
-          >
-            {isBoundaryVisible ? "Hide Boundary" : "Show Boundary"}
-          </button>
+<button
+  onClick={toggleBoundaryVisibility}
+  className={`w-full p-3 rounded-lg transition-colors ${
+    isBoundaryVisible ? "bg-green-500 text-white" : "bg-gray-400 text-black"
+  }`}
+>
+  {isBoundaryVisible ? "Toggle Boundary" : "Toggle Boundary"}
+</button>
+
+
+
         </div>
       </div>
       {estimatedCosts.totalCost && (
