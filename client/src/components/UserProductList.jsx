@@ -51,7 +51,7 @@ const UserProductList = ({ selectedCategory }) => {
               <div className="w-full h-[250px] sm:h-[300px] flex justify-center items-center overflow-hidden">
                 <img
                   className="px-5 sm:px-10 h-[200px] sm:h-[250px] object-contain"
-                  src={`http://localhost:3000/${product.image}`}
+                  src={`https://gharbanao-87pi.onrender.com/${product.image}`}
                   alt={product.name}
                 />
               </div>
