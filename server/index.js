@@ -12,6 +12,8 @@ require("./models/Otp");
 require("./models/product");
 require("./models/orderModel"); // Add order model
 
+
+
 // Import routes
 const authRouter = require("./routes/authRoute");
 const vendorRoute = require("./routes/vendorRoute");
@@ -32,6 +34,8 @@ app.use(
     credentials: true,
   })
 );
+// Static files
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 app.use(express.json({ limit: "50mb" }));  // Increase JSON limit
 app.use(express.urlencoded({ limit: "50mb", extended: true })); // Increase URL-encoded limit
@@ -44,8 +48,7 @@ app.use("/api/designs", designRoutes);
 app.use("/api/vendor", vendorAuthRoutes);
 app.use("/api/orders", orderRoutes); // Add order routes
 
-// Static files
-app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+
 
 // 3) Connect to MongoDB
 connectToDatabase();
