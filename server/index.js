@@ -61,6 +61,11 @@ app.use((err, req, res, next) => {
   });
 });
 
+app.get("/", (req, res) => {
+  res.status(200).send("Server is running!");
+});
+
+
 // 5) Server
 const PORT = 3000;
 app.listen(PORT, () => {
