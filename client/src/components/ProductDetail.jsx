@@ -76,7 +76,7 @@ const ProductDetail = () => {
           <div className="px-6 sm:px-32 w-full lg:w-1/2 h-[300px] sm:h-[500px] flex justify-center items-center rounded-2xl bg-[#F4F8F7] overflow-hidden">
             <img
               className="max-h-full object-contain"
-              src={`https://gharbanao-87pi.onrender.com/${product.image}`}
+              src={product.image}
               alt={product.name}
             />
           </div>
