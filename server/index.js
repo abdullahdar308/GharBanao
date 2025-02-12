@@ -63,6 +63,7 @@ app.use((err, req, res, next) => {
 
 app.get("/", (req, res) => {
   res.status(200).send("Server is running!");
+  console.log("PING RECEIVED"); 
 });
 
 
