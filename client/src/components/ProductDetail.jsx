@@ -19,7 +19,7 @@ const ProductDetail = () => {
     const fetchProduct = async () => {
       try {
         const response = await fetch(
-          `https://gharbanao-87pi.onrender.com/api/product/name/${productName}`
+          `http://localhost:3000/api/product/name/${productName}`
         );
         if (!response.ok) throw new Error("Failed to fetch product details");
         const data = await response.json();
@@ -58,46 +58,48 @@ const ProductDetail = () => {
       <Navigation />
       <div
         onClick={goToCart}
-        className="absolute right-24 top-48 p-5 bg-[#e1eae8] rounded-[50%] cursor-pointer hover:bg-[#d1dddb] z-10"
+        className="fixed right-6 sm:right-12 top-32 sm:top-48 p-4 sm:p-5 bg-[#e1eae8] rounded-full cursor-pointer hover:bg-[#d1dddb] z-10"
       >
-        <img className="w-9" src={cartIcon} alt="Cart" />
+        <img className="w-6 sm:w-9" src={cartIcon} alt="Cart" />
       </div>
 
       {showAddToCartMessage && (
-        <div className="bg-[#00000065] fixed left-0 top-0 right-0 bottom-0 z-10">
-          <div className="fixed top-32 left-[45%] bg-green-500 text-white text-2xl text-center p-3 rounded-md shadow-md">
+        <div className="bg-[#00000065] fixed inset-0 z-10 flex justify-center items-center">
+          <div className="bg-green-500 text-white text-lg sm:text-2xl text-center p-3 rounded-md shadow-md">
             <h2>Item added to cart!</h2>
           </div>
         </div>
       )}
 
       {product && (
-        <div className="card flex rounded-2xl pt-5 mt-16 px-16 m-auto max-w-[1920px] relative fade-in transition duration-500 ease-in">
-          <div className="px-32 w-1/2 h-[500px] flex justify-center items-center rounded-2xl bg-[#F4F8F7] overflow-hidden">
+        <div className="card flex flex-col lg:flex-row rounded-2xl pt-5 mt-36 sm:mt-32 px-4 sm:px-16 mx-auto max-w-[95%] sm:max-w-[1920px] relative fade-in transition duration-500 ease-in">
+          <div className="px-6 sm:px-32 w-full lg:w-1/2 h-[300px] sm:h-[500px] flex justify-center items-center rounded-2xl bg-[#F4F8F7] overflow-hidden">
             <img
               className="max-h-full object-contain"
-              src={`https://gharbanao-87pi.onrender.com/${product.image}`}
+              src={`http://localhost:3000/${product.image}`}
               alt={product.name}
             />
           </div>
 
-          <div className="py-8 pl-24 w-1/2 mt-12">
-            <h3 className="text-6xl font-semibold">{product.name}</h3>
-            <h4 className="mt-10 text-2xl font-semibold">
+          <div className="py-6 sm:py-8 px-4 sm:pl-24 w-full lg:w-1/2 mt-6 sm:mt-12">
+            <h3 className="text-3xl sm:text-6xl font-semibold">
+              {product.name}
+            </h3>
+            <h4 className="mt-6 sm:mt-10 text-xl sm:text-2xl font-semibold">
               Category: <span className="font-normal">{product.category}</span>
             </h4>
-            <h4 className="mt-5 text-2xl font-semibold mr-16">
+            <h4 className="mt-4 sm:mt-5 text-xl sm:text-2xl font-semibold mr-4 sm:mr-16">
               Description: <br />
-              <span className="mt-4 font-normal text-xl">
+              <span className="mt-2 sm:mt-4 font-normal text-lg sm:text-xl">
                 {product.description}
               </span>
             </h4>
-            <h4 className="text-4xl mt-20 mb-12 font-semibold">
+            <h4 className="text-2xl sm:text-4xl mt-10 sm:mt-20 mb-8 sm:mb-12 font-semibold">
               PKR {product.price}
             </h4>
             <div className="flex justify-between items-center">
               <button
-                className="bg-[#468378] rounded-lg text-white text-2xl px-10 py-4"
+                className="bg-[#468378] rounded-lg text-white text-lg sm:text-2xl px-6 sm:px-10 py-3 sm:py-4"
                 onClick={() =>
                   handleAddToCart(
                     product._id,

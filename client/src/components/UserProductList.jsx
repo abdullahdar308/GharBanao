@@ -34,36 +34,36 @@ const UserProductList = ({ selectedCategory }) => {
   return (
     <>
       {showAddToCartMessage && (
-        <div className="bg-[#00000065] fixed left-0 top-0 right-0 bottom-0 z-10">
-          <div className="fixed top-32 left-[45%] bg-green-500 text-white text-2xl text-center p-3 rounded-md shadow-md">
+        <div className="bg-[#00000065] fixed inset-0 z-10 flex justify-center items-center">
+          <div className="bg-green-500 text-white text-lg sm:text-2xl text-center p-3 rounded-md shadow-md">
             <h2>Item added to cart!</h2>
           </div>
         </div>
       )}
-      <div className="mt-20">
-        <div className="items flex flex-wrap mt-5 justify-start gap-20">
+      <div className="mt-20 px-4 sm:px-8">
+        <div className="flex flex-wrap justify-start gap-6 sm:gap-10 lg:gap-10">
           {filteredProducts.map((product) => (
             <div
               key={product._id}
               onClick={() => handleCardClick(product._id, product.name)}
-              className="card bg-[#F2F6F5] w-[31%] rounded-2xl pt-5 mb-16 relative fade-in hover:scale-105 transition duration-500 ease-in cursor-pointer flex flex-col justify-between"
+              className="card bg-[#F2F6F5] w-full sm:w-[48%] md:w-[31%] rounded-2xl pt-5 mb-10 relative fade-in hover:scale-105 transition duration-500 ease-in cursor-pointer flex flex-col justify-between shadow-md"
             >
-              <div className="w-full h-[350px] flex justify-center items-center overflow-hidden">
+              <div className="w-full h-[250px] sm:h-[300px] flex justify-center items-center overflow-hidden">
                 <img
-                  className="px-10 h-[300px] object-contain"
-                  src={`https://gharbanao-87pi.onrender.com/${product.image}`}
+                  className="px-5 sm:px-10 h-[200px] sm:h-[250px] object-contain"
+                  src={`http://localhost:3000/${product.image}`}
                   alt={product.name}
                 />
               </div>
 
-              <div className="bg-[#E6EEEC] rounded-b-2xl py-8 px-12 h-[120px]">
+              <div className="bg-[#E6EEEC] rounded-b-2xl py-6 sm:py-8 px-8 sm:px-12 h-auto">
                 <h3 className="text-2xl font-semibold">{product.name}</h3>
-                <div className="flex justify-between items-center">
+                <div className="flex justify-between items-center mt-4">
                   <h4 className="text-2xl font-semibold">
                     PKR {product.price}
                   </h4>
                   <button
-                    className="bg-[#468378] rounded-lg text-white text-xl px-8 py-3 z-20 hover:bg-[#4b9d8e]"
+                    className="bg-[#468378] rounded-lg text-white text-xl px-4 sm:px-8 py-2 sm:py-3 z-20 hover:bg-[#4b9d8e]"
                     onClick={(e) =>
                       handleAddToCart(
                         e,

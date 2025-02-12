@@ -7,7 +7,7 @@ const CatalogueNav = ({ selectedCategory, setSelectedCategory }) => {
     "All",
     "Furniture",
     "Electronics",
-    "Wall Art",
+    "Flooring",
     "Decor",
     "Kitchen Essentials",
   ];
@@ -18,14 +18,14 @@ const CatalogueNav = ({ selectedCategory, setSelectedCategory }) => {
   };
 
   return (
-    <div className="sidebar bg-white flex items-center pt-8">
-      <div className="sidebar-items mt-10 flex items-center gap-7 relative">
+    <div className="sidebar bg-white flex items-center pt-8 w-full">
+      <div className="sidebar-items mt-10 flex gap-4 overflow-x-auto whitespace-nowrap px-4 w-full">
         {categories.map((category) => (
           <button
             key={category}
-            className={`text-xl px-8 py-4 rounded-xl ${
+            className={`text-xl px-8 py-4 rounded-xl flex-shrink-0 transition-all duration-300 ${
               category === selectedCategory
-                ? "bg-[#468378] text-white" // Selected style
+                ? "bg-[#468378] text-white"
                 : "bg-[#4683781d] hover:bg-[#468378] hover:text-white"
             }`}
             onClick={() => handleCategoryClick(category)}

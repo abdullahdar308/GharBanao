@@ -122,7 +122,7 @@ const Cart = () => {
         };
 
         // Save to backend
-        const response = await fetch("https://gharbanao-87pi.onrender.com/api/orders", {
+        const response = await fetch("http://localhost:3000/api/orders", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(orderData),
@@ -182,7 +182,7 @@ const Cart = () => {
     <>
       <Navigation />
       <div className="flex justify-center w-full">
-        <div className="w-2/5 mb-5 mt-10 ml-3 flex flex-col min-h-[95vh] ">
+        <div className="w-full md:px-0 px-16 md:w-2/5 mb-5 mt-10 ml-3 flex flex-col min-h-[95vh] ">
           <div className="top flex justify-between pl-10 pr-10 mb-5">
             <button
               onClick={selectCartTab}
@@ -190,10 +190,6 @@ const Cart = () => {
                 isCartSelected ? "bg-white" : ""
               }`}
             >
-              {/* <img
-              src={isCartSelected ? orderIconOrange : orderIconGrey}
-              alt="Payment"
-            /> */}
               <h2
                 className={
                   isCartSelected
@@ -210,10 +206,6 @@ const Cart = () => {
                 isCheckOutSelected ? "bg-white" : ""
               }`}
             >
-              {/* <img
-              src={isCheckOutSelected ? paymentIconOrange : paymentIconGrey}
-              alt="Place Order"
-            /> */}
               <h2
                 className={
                   isCheckOutSelected
@@ -231,10 +223,6 @@ const Cart = () => {
                 isHistorySelected ? "bg-white" : ""
               }`}
             >
-              {/* <img
-              src={isHistorySelected ? historyIconOrange : historyIconGrey}
-              alt="History"
-            /> */}
               <h2
                 className={
                   isHistorySelected
@@ -384,11 +372,11 @@ const Cart = () => {
                   <div className="mt-2 mb-4">
                     {/* <div className="w-full bg-[#edf3f1] p-10 rounded-xl flex flex-col gap-2 mb-40"> */}
                     <form className="w-full" onSubmit={handleCompleteOrder}>
-                      <div className="flex">
+                      <div className="flex sm:flex-row flex-col">
                         <input
                           required
                           type="text"
-                          className="text-xl w-3/5 border-gray-300 border outline-none py-3 px-6 rounded-md mb-2 mr-3 "
+                          className="text-xl w-full sm:w-3/5 border-gray-300 border outline-none py-3 px-6 rounded-md mb-2 mr-3 "
                           placeholder="Enter Name... "
                           value={userName}
                           onChange={(e) => setUserName(e.target.value)}
@@ -396,7 +384,7 @@ const Cart = () => {
                         <input
                           required
                           type="number"
-                          className="text-xl w-2/5 border-gray-300 border outline-none py-3 px-6 rounded-md mb-2 mr-3 "
+                          className="text-xl w-full sm:w-2/5 border-gray-300 border outline-none py-3 px-6 rounded-md mb-2 mr-3 "
                           placeholder="Enter Mobile Number... "
                           value={userMobileNumber}
                           onChange={(e) => setUserMobileNumber(e.target.value)}
