@@ -33,7 +33,6 @@ const AddProduct = () => {
       description,
       price,
       image,
-      // vendorname:vendor.name, // vendor name
     };
 
     await addProduct(productData);
@@ -51,14 +50,14 @@ const AddProduct = () => {
       <div>
         <DashboardSidebar />
       </div>
-      <div className="p-12 flex">
-        <div>
+      <div className="p-12 flex flex-col lg:flex-row w-full lg:mt-0 mt-20">
+        <div className="w-full lg:w-1/2">
           <h2 className="text-3xl font-semibold">Add New Product Details</h2>
           <form onSubmit={handleSubmit}>
             <div className="mt-12 flex flex-col mb-10">
               <label className="text-xl font-medium mb-4">Product Name</label>
               <input
-                className="bg-[#E9EDED] text-xl px-7 py-3 outline-none rounded-lg w-[500px]"
+                className="bg-[#E9EDED] text-xl px-7 py-3 outline-none rounded-lg w-full max-w-[500px]"
                 type="text"
                 placeholder="Enter Product Name"
                 value={productName}
@@ -71,14 +70,13 @@ const AddProduct = () => {
                 Product Category
               </label>
               <select
-                className="bg-[#E9EDED] text-xl px-7 py-3 outline-none rounded-lg w-[500px]"
+                className="bg-[#E9EDED] text-xl px-7 py-3 outline-none rounded-lg w-full max-w-[500px]"
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
               >
                 <option value="Furniture">Furniture</option>
-                {/* <option value="Home Decor">Home Decor</option> */}
                 <option value="Electronics">Electronics</option>
-                <option value="Wall Art">Wall Art</option>
+                <option value="Flooring">Flooring</option>
                 <option value="Decor">Decor</option>
                 <option value="Kitchen Essentials">Kitchen Essentials</option>
               </select>
@@ -89,7 +87,7 @@ const AddProduct = () => {
               </label>
               <textarea
                 placeholder="Enter Product Description"
-                className="bg-[#E9EDED] text-xl px-7 py-3 outline-none rounded-lg w-[500px]"
+                className="bg-[#E9EDED] text-xl px-7 py-3 outline-none rounded-lg w-full max-w-[500px]"
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 required
@@ -98,7 +96,7 @@ const AddProduct = () => {
             <div className="mt-12 flex flex-col mb-10">
               <label className="text-xl font-medium mb-4">Product Price</label>
               <input
-                className="bg-[#E9EDED] text-xl px-7 py-3 outline-none rounded-lg w-[500px]"
+                className="bg-[#E9EDED] text-xl px-7 py-3 outline-none rounded-lg w-full max-w-[500px]"
                 type="number"
                 placeholder="Enter Product Price"
                 value={price}
@@ -112,7 +110,7 @@ const AddProduct = () => {
                 Product Picture
               </label>
               <input
-                className="bg-[#E9EDED] text-xl px-7 py-3 outline-none rounded-lg w-[500px]"
+                className="bg-[#E9EDED] text-xl px-7 py-3 outline-none rounded-lg w-full max-w-[500px]"
                 type="file"
                 onChange={handleFileChange}
                 required
@@ -128,8 +126,8 @@ const AddProduct = () => {
             </button>
           </form>
         </div>
-        <div className="flex justify-center items-center">
-          <img className="w-4/5" src={sidePic} alt="" />
+        <div className="hidden lg:flex justify-center items-center w-1/2">
+          <img className="w-full" src={sidePic} alt="" />
         </div>
       </div>
     </div>

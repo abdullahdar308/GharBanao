@@ -28,6 +28,14 @@ import zoomInIcon from "../assets/zoomInIcon.svg";
 import zoomOutIcon from "../assets/zoomOutIcon.svg";
 import resetZoomIcon from "../assets/resetZoomIcon.svg";
 import exportIcon from "../assets/exportIcon.svg";
+import doorCategoryIcon from "../assets/Design-SVGs/doorCategoryIcon.png";
+import wallCategoryIcon from "../assets/Design-SVGs/wallCategoryIcon.png";
+import windowCategoryIcon from "../assets/Design-SVGs/windowCategoryIcon.png";
+import furnitureCategoryIcon from "../assets/Design-SVGs/furnitureCategoryIcon.png";
+import stairsCategoryIcon from "../assets/Design-SVGs/stairsCategoryIcon.png";
+import carCategoryIcon from "../assets/Design-SVGs/carCategoryIcon.png";
+import textCategoryIcon from "../assets/Design-SVGs/textCategoryIcon.png";
+import accessoriesCategoryIcon from "../assets/Design-SVGs/accessoriesCategoryIcon.png";
 import Navigation from "./Navigation";
 
 const Design = () => {
@@ -36,6 +44,8 @@ const Design = () => {
   const [selectedShape, setSelectedShape] = useState(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isDoorDropdownOpen, setIsDoorDropdownOpen] = useState(false);
+  const [isAccessoriesDropdownOpen, setIsAccessoriesDropdownOpen] =
+    useState(false);
   const [isFurnitureDropdownOpen, setIsFurnitureDropdownOpen] = useState(false);
   const [selectedObjectDetails, setSelectedObjectDetails] = useState(null);
   const [area, setArea] = useState("");
@@ -52,7 +62,7 @@ const Design = () => {
     x: 0,
     y: 0,
     width: 700, // Initial value will be updated
-    height: 660,
+    height: 700,
   });
   // Update boundary when divWidth changes
   useEffect(() => {
@@ -83,9 +93,21 @@ const Design = () => {
     setIsDropdownOpen(!isDropdownOpen);
   };
 
-  const toggleDoorDropdown = () => setIsDoorDropdownOpen((prev) => !prev);
-  const toggleFurnitureDropdown = () =>
+  const toggleDoorDropdown = () => {
+    setIsDoorDropdownOpen((prev) => !prev);
+    setIsFurnitureDropdownOpen(false);
+    setIsAccessoriesDropdownOpen(false);
+  };
+  const toggleAccessoriesDropdown = () => {
+    setIsFurnitureDropdownOpen(false);
+    setIsDoorDropdownOpen(false);
+    setIsAccessoriesDropdownOpen((prev) => !prev);
+  };
+  const toggleFurnitureDropdown = () => {
     setIsFurnitureDropdownOpen((prev) => !prev);
+    setIsDoorDropdownOpen(false);
+    setIsAccessoriesDropdownOpen(false);
+  };
 
   const [actionStack, setActionStack] = useState([]);
 
@@ -266,7 +288,7 @@ const Design = () => {
       });
 
       fabricImg.customType = "Wall";
-      fabricImg.baseCostPerPixel = 27;
+      fabricImg.baseCostPerPixel = 29;
       fabricImg.scaleToWidth(30); // Set desired width
       fabricImg.scaleToHeight(15); // Set desired height
       canvas.add(fabricImg);
@@ -1108,13 +1130,13 @@ const Design = () => {
   const estimateCosts = () => {
     if (!canvas) return;
 
-    const ratePerSqFt = 1640;
+    const ratePerSqFt = 1610;
     const allObjects = canvas.getObjects();
     let totalCost = 0;
     let greyStructureCost = area * ratePerSqFt;
     let productsCost = 0;
     let wallCost = 0;
-    let productMap = new Map(); // To store product counts and costs
+    let productMap = new Map();
 
     allObjects.forEach((obj) => {
       if (obj.customType) {
@@ -1220,14 +1242,17 @@ const Design = () => {
 
       console.log("Saving payload:", payload);
 
-      const response = await fetch("https://gharbanao-87pi.onrender.com/api/designs", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(payload),
-      });
+      const response = await fetch(
+        "https://gharbanao-87pi.onrender.com/api/designs",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(payload),
+        }
+      );
 
       const result = await response.json();
 
@@ -1243,9 +1268,12 @@ const Design = () => {
       setDesignName("");
 
       // Refresh designs list
-      const designsResponse = await fetch("https://gharbanao-87pi.onrender.com/api/designs", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const designsResponse = await fetch(
+        "https://gharbanao-87pi.onrender.com/api/designs",
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
       const updatedDesigns = await designsResponse.json();
       setDesigns(updatedDesigns);
     } catch (error) {
@@ -1308,11 +1336,14 @@ const Design = () => {
         }
 
         // 2. Make the request
-        const response = await fetch("https://gharbanao-87pi.onrender.com/api/designs", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const response = await fetch(
+          "https://gharbanao-87pi.onrender.com/api/designs",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
 
         // // 3. Handle 401 Unauthorized
         // if (response.status === 401) {
@@ -1382,8 +1413,26 @@ const Design = () => {
   const SidebarButton = ({ label, onClick, children }) => (
     <button
       onClick={onClick}
-      className="w-full p-3 bg-[#d4e6e4] hover:bg-white text-black rounded-xl transition-all duration-200 flex items-center justify-center text-center font-medium"
+      className="w-full p-3 bg-[#d4e6e4] hover:bg-white text-black rounded-xl transition-all duration-200 flex items-center justify-center text-center font-medium text-lg"
     >
+      <img
+        src={
+          label === "Wall"
+            ? wallCategoryIcon
+            : label === "Window"
+            ? windowCategoryIcon
+            : label === "Stairs"
+            ? stairsCategoryIcon
+            : label === "Car"
+            ? carCategoryIcon
+            : label === "Text"
+            ? textCategoryIcon
+            : ""
+        }
+        className="w-12 mr-6"
+        alt=""
+      />
+
       {label}
     </button>
   );
@@ -1392,8 +1441,21 @@ const Design = () => {
     <div className="w-full relative flex justify-center">
       <button
         onClick={onToggle}
-        className="w-full p-3 bg-[#d4e6e4] hover:bg-white text-gray-800 rounded-xl flex justify-center gap-7 items-center font-medium"
+        className="w-full p-3 bg-[#d4e6e4] hover:bg-white text-gray-800 rounded-xl flex justify-center gap-6 items-center font-medium text-lg"
       >
+        <img
+          src={
+            label === "Door"
+              ? doorCategoryIcon
+              : label === "Furniture"
+              ? furnitureCategoryIcon
+              : label === "Accessories"
+              ? accessoriesCategoryIcon
+              : ""
+          }
+          className="w-12"
+          alt=""
+        />
         {label}
         <span
           className={`transform transition-transform ${
@@ -1430,10 +1492,15 @@ const Design = () => {
   const ActionButton = ({ icon, label, onClick }) => (
     <button
       onClick={onClick}
-      className="w-full p-3 bg-[#deedea] hover:bg-white rounded-lg flex flex-col items-center text-black transition-colors"
+      className={`w-full p-3 rounded-lg flex flex-col items-center text-black transition-colors 
+        ${
+          label === "Delete"
+            ? "bg-[#fae6e6] hover:bg-[#ffe2e2]"
+            : "bg-[#deedea] hover:bg-white"
+        }`}
     >
       <img src={icon} className="w-6 h-6 mb-2" alt={label} />
-      <span className="text-sm">{label}</span>
+      <span className="text-base">{label}</span>
     </button>
   );
 
@@ -1640,16 +1707,16 @@ const Design = () => {
 
       <div className="flex flex-col lg:flex-row gap-6 max-w-[1920px] px-4 lg:px-8 xl:px-16 py-8 mx-auto">
         {/* Left Sidebar */}
-        {/* Left Sidebar */}
         <div className="w-full sm:w-96 xl:w-96 bg-[#2C3433] rounded-2xl p-6 space-y-8">
           {/* 🏗️ Items Section */}
           <div className="space-y-6">
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 gap-4">
               {/* Wall Button */}
               <SidebarButton label="Wall" onClick={addWall} />
 
               {/* Door Dropdown */}
-              <div className="flex justify-center">
+              <div className="flex justify-center bg-[#d4e6e4] rounded-xl">
+                {/* <img src={doorCategoryIcon} className="w-12" alt="" /> */}
                 <DropdownButton
                   label="Door"
                   isOpen={isDoorDropdownOpen}
@@ -1682,14 +1749,26 @@ const Design = () => {
                 </DropdownButton>
               </div>
 
+              {/* Accessories Dropdown */}
+              <div className="flex justify-center bg-[#d4e6e4] rounded-xl">
+                {/* <img src={doorCategoryIcon} className="w-12" alt="" /> */}
+                <DropdownButton
+                  label="Accessories"
+                  isOpen={isAccessoriesDropdownOpen}
+                  onToggle={toggleAccessoriesDropdown}
+                >
+                  <DropdownItem onClick={addToilet}>Toilet</DropdownItem>
+                  <DropdownItem onClick={addSink}>Sink</DropdownItem>
+                  <DropdownItem onClick={addBathtub}>Bath Tub</DropdownItem>
+                  <DropdownItem onClick={addStove}>Stove</DropdownItem>
+                </DropdownButton>
+              </div>
+
               {/* Other Items */}
               {[
                 { label: "Stairs", action: addStairs },
                 { label: "Car", action: addCar },
-                { label: "Toilet", action: addToilet },
-                { label: "Sink", action: addSink },
-                { label: "Stove", action: addStove },
-                { label: "Bath Tub", action: addBathtub },
+
                 { label: "Text", action: addText },
               ].map((item) => (
                 <SidebarButton
@@ -1782,7 +1861,7 @@ const Design = () => {
           <p>Boundary width: {boundary.width}px</p> */}
           {/* In your JSX for the canvas container */}
           <div
-            className="relative flex justify-center"
+            className="relative flex justify-center items-center"
             style={{
               width: "100%",
               height: `${boundary.height}px`,
@@ -1797,7 +1876,7 @@ const Design = () => {
         </div>
 
         {/* Right Sidebar */}
-        <div className="w-full lg:w-32 xl:w-40 bg-[#2C3433] rounded-2xl p-4 space-y-4 lg:flex lg:flex-col lg:justify-center">
+        <div className="w-full lg:w-44 xl:w-48 bg-[#2C3433] rounded-2xl p-4 space-y-4 lg:flex lg:flex-col pt-56">
           <ActionButton
             icon={deleteIcon}
             label="Delete"
@@ -1841,13 +1920,17 @@ const Design = () => {
           </button>
         </div>
       </div>
+
       {estimatedCosts.totalCost && (
         <div className="max-w-[1920px] m-auto">
           <div className="mt-20 bg-gray-100 mb-9 md:mx-44 p-10 pt-12 rounded-2xl shadow-md text-center ">
             <h2 className="text-5xl font-bold mb-14">Estimated Costs</h2>
             {/* Total Cost */}
             <h3 className="text-3xl font-semibold bg-[#D4E0E0] px-8 py-5 rounded-xl mt-4 inline">
-              Total Cost: PKR {estimatedCosts.totalCost.toLocaleString()}
+              Total Cost: PKR{" "}
+              {estimatedCosts.totalCost.toLocaleString(undefined, {
+                maximumFractionDigits: 0,
+              })}
             </h3>
             {/* Cost Breakdown */}
             <div className="mt-14 flex justify-center gap-40">
@@ -1859,7 +1942,11 @@ const Design = () => {
                     Grey Structure Cost
                   </h4>
                   <p className="text-2xl">
-                    PKR {estimatedCosts.greyStructureCost?.toLocaleString()}
+                    PKR{" "}
+                    {estimatedCosts.greyStructureCost?.toLocaleString(
+                      undefined,
+                      { maximumFractionDigits: 0 }
+                    )}
                   </p>
                 </div>
               </div>
@@ -1870,7 +1957,10 @@ const Design = () => {
                 <div>
                   <h4 className="text-2xl text-gray-700">Labor Cost</h4>
                   <p className="text-2xl">
-                    PKR {estimatedCosts.laborCost?.toLocaleString()}
+                    PKR{" "}
+                    {estimatedCosts.laborCost?.toLocaleString(undefined, {
+                      maximumFractionDigits: 0,
+                    })}
                   </p>
                 </div>
               </div>
@@ -1881,7 +1971,10 @@ const Design = () => {
                 <div>
                   <h4 className="text-2xl text-gray-700">Items Cost</h4>
                   <p className="text-2xl">
-                    PKR {estimatedCosts.productsCost?.toLocaleString()}
+                    PKR{" "}
+                    {estimatedCosts.productsCost?.toLocaleString(undefined, {
+                      maximumFractionDigits: 0,
+                    })}
                   </p>
                 </div>
               </div>
@@ -1938,12 +2031,63 @@ const Design = () => {
               {showGreyStructureDetails && (
                 <div className="mt-2 transition-all duration-300 pl-6">
                   <div className="flex justify-between py-2 border-b">
-                    <span className="text-medium text-gray-600">Wall Cost</span>
+                    <span className="text-medium text-gray-600">Walls</span>
                     <span className="text-medium text-gray-600 font-semibold mr-10">
                       PKR{" "}
                       {estimatedCosts.wallCost.toLocaleString(undefined, {
                         maximumFractionDigits: 0,
                       })}
+                    </span>
+                  </div>
+                  <div className="flex justify-between py-2 border-b">
+                    <span className="text-medium text-gray-600">
+                      Excavation & Foundation
+                    </span>
+                    <span className="text-medium text-gray-600 font-semibold mr-10">
+                      PKR{" "}
+                      {(
+                        (estimatedCosts.greyStructureCost -
+                          estimatedCosts.wallCost) *
+                        0.205
+                      ).toLocaleString(undefined, { maximumFractionDigits: 0 })}
+                    </span>
+                  </div>
+
+                  <div className="flex justify-between py-2 border-b">
+                    <span className="text-medium text-gray-600">Roofing</span>
+                    <span className="text-medium text-gray-600 font-semibold mr-10">
+                      PKR{" "}
+                      {(
+                        (estimatedCosts.greyStructureCost -
+                          estimatedCosts.wallCost) *
+                        0.33
+                      ).toLocaleString(undefined, { maximumFractionDigits: 0 })}
+                    </span>
+                  </div>
+                  <div className="flex justify-between py-2 border-b">
+                    <span className="text-medium text-gray-600">
+                      Plumbing & Electrical Conduits
+                    </span>
+                    <span className="text-medium text-gray-600 font-semibold mr-10">
+                      PKR{" "}
+                      {(
+                        (estimatedCosts.greyStructureCost -
+                          estimatedCosts.wallCost) *
+                        0.19
+                      ).toLocaleString(undefined, { maximumFractionDigits: 0 })}
+                    </span>
+                  </div>
+                  <div className="flex justify-between py-2 border-b mb-7">
+                    <span className="text-medium text-gray-600">
+                      Plastering Cost
+                    </span>
+                    <span className="text-medium text-gray-600 font-semibold mr-10">
+                      PKR{" "}
+                      {(
+                        (estimatedCosts.greyStructureCost -
+                          estimatedCosts.wallCost) *
+                        0.275
+                      ).toLocaleString(undefined, { maximumFractionDigits: 0 })}
                     </span>
                   </div>
                 </div>

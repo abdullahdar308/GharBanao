@@ -1,3 +1,5 @@
+// client/src/components/ViewVendors.jsx
+
 import React from "react";
 import SuperAdminDashboardSidebar from "./SuperAdminDashboardSidebar";
 import { useNavigate } from "react-router-dom";
@@ -17,12 +19,12 @@ const ViewVendors = () => {
       <div>
         <SuperAdminDashboardSidebar />
       </div>
-      <div className="flex-grow mr-16 mt-16">
+      <div className="flex-grow mx-10 sm:mx-16 mt-24 md:mt-16">
         <h1 className="text-3xl font-semibold mb-10">View Vendors List</h1>
-        
+
         <div className="flex container bg-[#2C3433] px-12 py-4 rounded-xl mb-10">
-          <h4 className="w-[40%] text-white text-xl">Vendor Name</h4>
-          <h4 className="w-[25%] text-white text-xl">Vendor Email</h4>
+          <h4 className="w-[45%] text-white text-xl">Vendor Name</h4>
+          <h4 className="w-[45%] text-white text-xl">Vendor Email</h4>
         </div>
 
         {loading && <p>Loading vendors...</p>}
@@ -35,8 +37,8 @@ const ViewVendors = () => {
               onClick={() => handleItemClick(vendor)}
               className="flex container bg-[#E9EDED] px-12 py-4 items-center rounded-xl cursor-pointer mt-5"
             >
-              <h4 className="w-[40%] text-xl">{vendor.name}</h4>
-              <h4 className="w-[25%] text-xl">{vendor.email}</h4>
+              <h4 className="w-[45%] text-xl">{vendor.name}</h4>
+              <h4 className="w-[45%] text-xl">{vendor.email}</h4>
             </div>
           ))}
         </div>

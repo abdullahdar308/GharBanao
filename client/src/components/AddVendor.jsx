@@ -28,13 +28,13 @@ const AddVendor = () => {
       <div>
         <SuperAdminDashboardSidebar />
       </div>
-      <div className="p-16">
+      <div className="mt-20 md:mt-12 px-12 sm:px-16 p-16 w-full">
         <h1 className="text-3xl font-semibold">Add Vendor</h1>
         <form onSubmit={handleSubmit}>
           <div className="mt-12 flex flex-col mb-10">
             <label className="text-xl font-medium mb-4">Vendor Name</label>
             <input
-              className="bg-[#E9EDED] text-xl px-7 py-3 outline-none rounded-lg w-[500px]"
+              className="bg-[#E9EDED] text-xl px-7 py-3 outline-none rounded-lg w-full max-w-[500px]"
               type="text"
               placeholder="Enter Vendor Name"
               value={vendorName}
@@ -44,7 +44,7 @@ const AddVendor = () => {
           <div className="mt-12 flex flex-col mb-10">
             <label className="text-xl font-medium mb-4">Vendor Email</label>
             <input
-              className="bg-[#E9EDED] text-xl px-7 py-3 outline-none rounded-lg w-[500px]"
+              className="bg-[#E9EDED] text-xl px-7 py-3 outline-none rounded-lg w-full max-w-[500px]"
               type="email"
               placeholder="Enter Vendor Email"
               value={vendorEmail}

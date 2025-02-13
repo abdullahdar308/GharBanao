@@ -72,7 +72,7 @@ const ProductDetail = () => {
       )}
 
       {product && (
-        <div className="card flex flex-col lg:flex-row rounded-2xl pt-5 mt-36 sm:mt-32 px-4 sm:px-16 mx-auto max-w-[95%] sm:max-w-[1920px] relative fade-in transition duration-500 ease-in">
+        <div className="card flex flex-col lg:flex-row rounded-2xl pt-5 mt-36 mb-24 sm:mt-32 px-4 sm:px-16 mx-auto max-w-[95%] sm:max-w-[1920px] relative fade-in transition duration-500 ease-in">
           <div className="px-6 sm:px-32 w-full lg:w-1/2 h-[300px] sm:h-[500px] flex justify-center items-center rounded-2xl bg-[#F4F8F7] overflow-hidden">
             <img
               className="max-h-full object-contain"

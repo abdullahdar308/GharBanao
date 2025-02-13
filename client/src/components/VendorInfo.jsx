@@ -14,7 +14,7 @@ const AdminDashboard = () => {
       <div className="">
         <SuperAdminDashboardSidebar />
       </div>
-      <div className="flex-grow mr-16 mt-16">
+      <div className="flex-grow mx-10 sm:mx-16 mt-24 md:mt-16">
         <div className="flex container bg-[#2C3433] px-12 py-4 rounded-xl">
           {/* <h4 className="w-[16%] text-white text-xl">Picture</h4> */}
           <h4 className="w-[40%] text-white text-xl">Product Name</h4>

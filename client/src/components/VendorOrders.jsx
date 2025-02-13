@@ -44,7 +44,7 @@ const VendorOrders = () => {
   return (
     <div className="flex max-w-[1920px] m-auto">
       <VendorDashboardSidebar />
-      <div className="flex-grow mr-16 mt-16 p-6">
+      <div className="flex-grow mt-16 p-6">
         <h2 className="text-2xl font-bold mb-6">Order History</h2>
         {orders.map((order) => (
           <div

@@ -1,15 +1,16 @@
-import React from "react";
+import React, { useState } from "react";
 import { useAuth } from "../contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import "./AdminDashboard.css";
 
 const SuperAdminDashboardSidebar = () => {
   const navigate = useNavigate();
-  const { logoutAdmin } = useAuth(); // Assuming you have a logout function in your auth context
+  const { logoutAdmin } = useAuth();
+  const [isOpen, setIsOpen] = useState(false);
 
   const handleLogout = async () => {
-    await logoutAdmin(); // Call the logout function
-    navigate("/"); // Redirect to homepage after logout
+    await logoutAdmin();
+    navigate("/");
   };
 
   const handleViewVendorsClick = () => {
@@ -20,33 +21,36 @@ const SuperAdminDashboardSidebar = () => {
     navigate("/superadmin/addVendor");
   };
 
+  const toggleSidebar = () => {
+    setIsOpen(!isOpen);
+  };
+
   return (
-    <div className="homepage-container max-w-[1920px] m-auto h-screen">
-      <div className="homepage-content flex flex-col h-full p-12 box-border">
-        <div className="flex flex-col items-center h-full w-80">
-          <img className="logo w-60 mb-7" src="/logo.png" alt="" />
-          <div className="bg-[#2C3433] rounded-3xl w-80 flex-grow h-full p-16 pt-24 flex flex-col justify-between">
-            <div>
-              <button
-                onClick={handleViewVendorsClick}
-                className="bg-none text-white text-xl mb-7"
-              >
-                View Vendors
-              </button>
-              <button
-                onClick={handleAddVendorClick}
-                className="bg-none text-white text-xl mb-7"
-              >
-                Add Vendors
-              </button>
-            </div>
-            <div className="flex justify-center">
-              <button className="text-2xl text-white" onClick={handleLogout}>
-                Log out
-              </button>
-            </div>
-          </div>
-        </div>
+    <div className="relative h-screen">
+      {/* Mobile Menu Button */}
+      <button
+        className="md:hidden fixed top-4 left-4 z-50 bg-gray-800 text-white p-2 rounded-md text-3xl"
+        onClick={toggleSidebar}
+      >
+        {isOpen ? "X" : "☰"}
+      </button>
+
+      {/* Sidebar */}
+      <div
+        className={`fixed md:relative top-0 left-0 w-80 h-full bg-[#2C3433] transition-transform transform ${
+          isOpen ? "translate-x-0" : "-translate-x-full"
+        } md:translate-x-0 flex flex-col p-6 pt-24 text-white z-40`}
+      >
+        <img className="w-60 mb-20 mx-auto" src="/logo2.svg" alt="Logo" />
+        <button onClick={handleViewVendorsClick} className="text-xl mb-7">
+          View Vendors
+        </button>
+        <button onClick={handleAddVendorClick} className="text-xl mb-7">
+          Add Vendors
+        </button>
+        <button className="text-2xl mt-auto" onClick={handleLogout}>
+          Log out
+        </button>
       </div>
     </div>
   );

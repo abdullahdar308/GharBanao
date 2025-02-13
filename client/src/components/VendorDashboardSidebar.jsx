@@ -1,64 +1,59 @@
-// client/src/components/VendorDashboardSidebar.jsx
-
-import React from "react";
+import React, { useState } from "react";
 import { useAuth } from "../contexts/AuthContext";
-import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import "./AdminDashboard.css";
 
 const VendorDashboardSidebar = () => {
   const navigate = useNavigate();
-  const { logoutAdmin, isAdminAuthenticated } = useAuth();
+  const { logoutAdmin } = useAuth();
+  const [isOpen, setIsOpen] = useState(false);
 
   const handleLogout = async () => {
-    localStorage.removeItem("vendorToken"); // Remove token
-    navigate("/"); // Redirect to login page after logout
+    localStorage.removeItem("vendorToken");
+    navigate("/");
   };
 
-  const handleListingsClick = () => {
-    navigate("/vendor/dashboard");
-  };
-  const handleAddProductClick = () => {
-    navigate("/vendor/addProduct");
-  };
-
-  const handleOrdersClick = () => {
-    navigate("/vendor/orders");
+  const toggleSidebar = () => {
+    setIsOpen(!isOpen);
   };
 
   return (
-    <div className="homepage-container max-w-[1920px] m-auto h-screen">
-      <div className="homepage-content flex flex-col h-full p-12 box-border">
-        <div className="flex flex-col items-center h-full w-80">
-          <img className="logo w-60 mb-7" src="/logo.png" alt="" />
-          <div className="bg-[#2C3433] rounded-3xl w-80 flex-grow h-full p-16 pt-24 flex flex-col justify-between">
-            <div>
-              <button
-                onClick={handleListingsClick}
-                className="bg-none text-white text-xl mb-7"
-              >
-                View Listings
-              </button>
-              <button
-                onClick={handleAddProductClick}
-                className="bg-none text-white text-xl mb-7"
-              >
-                Add Products
-              </button>
-              <button
-                onClick={handleOrdersClick}
-                className="bg-none text-white text-xl mb-7"
-              >
-                View Orders
-              </button>
-            </div>
-            <div className="flex justify-center">
-              <button className="text-2xl text-white" onClick={handleLogout}>
-                Log out
-              </button>
-            </div>
-          </div>
-        </div>
+    <div className="relative h-screen">
+      {/* Mobile Menu Button */}
+      <button
+        className="md:hidden fixed top-4 left-4 z-50 bg-gray-800 text-white p-2 rounded-md text-3xl"
+        onClick={toggleSidebar}
+      >
+        {isOpen ? "X" : "☰"}
+      </button>
+
+      {/* Sidebar */}
+      <div
+        className={`fixed md:relative top-0 left-0 w-80 h-full bg-[#2C3433] transition-transform transform ${
+          isOpen ? "translate-x-0" : "-translate-x-full"
+        } md:translate-x-0 flex flex-col p-6 pt-24 text-white z-40`}
+      >
+        <img className="w-60 mb-20 mx-auto" src="/logo2.svg" alt="Logo" />
+        <button
+          onClick={() => navigate("/vendor/dashboard")}
+          className="text-xl mb-7"
+        >
+          View Listings
+        </button>
+        <button
+          onClick={() => navigate("/vendor/addProduct")}
+          className="text-xl mb-7"
+        >
+          Add Products
+        </button>
+        <button
+          onClick={() => navigate("/vendor/orders")}
+          className="text-xl mb-7"
+        >
+          View Orders
+        </button>
+        <button className="text-2xl mt-auto" onClick={handleLogout}>
+          Log out
+        </button>
       </div>
     </div>
   );

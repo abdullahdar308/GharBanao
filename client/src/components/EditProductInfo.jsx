@@ -24,7 +24,9 @@ const EditProductInfo = () => {
   // Fetch existing product details
   useEffect(() => {
     const fetchProduct = async () => {
-      const response = await fetch(`https://gharbanao-87pi.onrender.com/api/product/${id}`);
+      const response = await fetch(
+        `https://gharbanao-87pi.onrender.com/api/product/${id}`
+      );
       const data = await response.json();
       if (response.ok) {
         setProductName(data.name);
@@ -62,13 +64,13 @@ const EditProductInfo = () => {
       <div>
         <DashboardSidebar />
       </div>
-      <div className="p-12">
+      <div className="p-12 w-full lg:mt-0 mt-20">
         <h2 className="text-3xl font-semibold">Edit Product Details</h2>
         <form onSubmit={handleSubmit}>
           <div className="mt-12 flex flex-col mb-10">
             <label className="text-xl font-medium mb-4">Product Name</label>
             <input
-              className="bg-[#E9EDED] text-xl px-7 py-3 outline-none rounded-lg w-[500px]"
+              className="bg-[#E9EDED] text-xl px-7 py-3 outline-none rounded-lg w-full max-w-[500px]"
               type="text"
               placeholder="Enter Product Name"
               value={productName}
@@ -78,7 +80,7 @@ const EditProductInfo = () => {
           <div className="mt-12 flex flex-col mb-10">
             <label className="text-xl font-medium mb-4">Product Category</label>
             <input
-              className="bg-[#E9EDED] text-xl px-7 py-3 outline-none rounded-lg w-[500px]"
+              className="bg-[#E9EDED] text-xl px-7 py-3 outline-none rounded-lg w-full max-w-[500px]"
               type="text"
               value={category}
               readOnly // Make this field read-only
@@ -90,7 +92,7 @@ const EditProductInfo = () => {
             </label>
             <textarea
               placeholder="Enter Product Description"
-              className="bg-[#E9EDED] text-xl px-7 py-3 outline-none rounded-lg w-[500px]"
+              className="bg-[#E9EDED] text-xl px-7 py-3 outline-none rounded-lg w-full max-w-[500px]"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               required
@@ -99,7 +101,7 @@ const EditProductInfo = () => {
           <div className="mt-12 flex flex-col mb-10">
             <label className="text-xl font-medium mb-4">Product Price</label>
             <input
-              className="bg-[#E9EDED] text-xl px-7 py-3 outline-none rounded-lg w-[500px]"
+              className="bg-[#E9EDED] text-xl px-7 py-3 outline-none rounded-lg w-full max-w-[500px]"
               type="number"
               placeholder="Enter Product Price"
               value={price}
@@ -111,7 +113,7 @@ const EditProductInfo = () => {
           <div className="mt-12 flex flex-col mb-10">
             <label className="text-xl font-medium mb-4">Product Picture</label>
             <input
-              className="bg-[#E9EDED] text-xl px-7 py-3 outline-none rounded-lg w-[500px]"
+              className="bg-[#E9EDED] text-xl px-7 py-3 outline-none rounded-lg w-full max-w-[500px]"
               type="file"
               onChange={handleFileChange}
               required
