@@ -1932,6 +1932,29 @@ const Design = () => {
                 maximumFractionDigits: 0,
               })}
             </h3>
+            <div className="flex flex-col bg-[#FFDEDE] px-8 py-5 rounded-xl mt-7 items-center lg:mx-60 md:mx-40 sm:mx-20 mx-10 ">
+              <div className="flex">
+                <img src={alertIcon} alt="" />
+                <h3 className="text-xl inline ml-6">
+                  {/* Total Cost: PKR {estimatedCosts.totalCost.toLocaleString()} */}
+                  Please note that due to fluctuations in current market prices,
+                  there may be a{" "}
+                  <span className="font-semibold text-2xl">5% </span> variance
+                  in the estimated cost.
+                </h3>
+              </div>
+              <h2 className="text-2xl mt-4 font-medium">
+                PKR{" "}
+                {(estimatedCosts.totalCost * 0.95).toLocaleString(undefined, {
+                  maximumFractionDigits: 0,
+                })}{" "}
+                - PKR{" "}
+                {(estimatedCosts.totalCost * 1.05).toLocaleString(undefined, {
+                  maximumFractionDigits: 0,
+                })}
+              </h2>
+            </div>
+
             {/* Cost Breakdown */}
             <div className="mt-14 flex justify-center gap-40">
               {/* Grey Structure Cost */}
